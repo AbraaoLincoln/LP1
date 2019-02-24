@@ -22,6 +22,7 @@ using value_type = int ; //!< Simple alias to help code maintenance.
 const value_type * lsearch( const value_type *first,
                             const value_type *last, value_type value )
 {
+    /*
     while(first <= last)
     {
         if(*first == value)
@@ -29,6 +30,22 @@ const value_type * lsearch( const value_type *first,
             return first;
         }
         first++;
+    }
+    */
+
+    if(*first == value)
+    {
+      return first;
+    }else
+    {
+      first += 1;
+      if(first < last)
+      {
+        return lsearch(first, last, value);
+      }else
+      {
+        return last;
+      }
     }
 
     return last;
@@ -42,11 +59,13 @@ const value_type * lsearch( const value_type *first,
  * \return A pointer to the target value within the range; or last, in case the value is not in the range.
  */
 const value_type * bsearch( const value_type *first, const value_type *last, value_type value )
-{   
-    int half = (last - first)/2, begin{0} ,end = last - first, loop{1}, count{0};
+{
+    int half = (last - first)/2;
+    //int begin{0} ,end = last - first, loop{1}, count{0};
     const value_type *start = first;
     start += half;
 
+    /*
     while(loop < (last - first))
     {
         loop *= 2;
@@ -56,7 +75,7 @@ const value_type * bsearch( const value_type *first, const value_type *last, val
     for(int i{0}; i < count;i++)
     {
         if(*start == value)
-        {   
+        {
             return start;
         }else if (*start > value)
         {
@@ -72,29 +91,34 @@ const value_type * bsearch( const value_type *first, const value_type *last, val
             start += half;
         }
     }
+    */
+
+    if(value < *first)
+    {
+      return last;
+    }
+
+
+    if(*start == value)
+    {
+        return start;
+    }else if (*start > value)
+    {
+      if(last - first != 0 )
+      {
+        return bsearch(first, start, value);
+      }
+
+    }else
+    {
+      if(last - first != 1)
+      {
+        return bsearch(start, last, value);
+      }
+    }
+
     return last; // STUB
 }
-
-/*
-for(int i{0}; i < count;i++)
-    {
-        if(*start == value)
-        {   
-            return start;
-        }else if (*start < value)
-        {
-            half = (end + half)/2;
-            start = first;
-            start += half;
-        }else
-        {
-            half = half / 2;
-            start = first;
-            start += half;
-        }
-    }
-*/
-
 
 // Driver function.
 int main()
