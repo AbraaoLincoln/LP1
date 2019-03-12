@@ -1,16 +1,20 @@
-#include "../includes/dado.h"
 #include <iostream>
+#include "../includes/dado.h"
 
 bool player1(int t, float & prob )
 {
-    prob += prob_dice(t);
-    //std::cout << prob;
-    if(prob < (float)(1 - prob))
+    if(t != 1)
     {
-        //std::cout << "aqui";
+        prob += prob_dice(t);
+        if(prob < (float)(1 - prob))
+        {
+            return true;
+        }
+    }else
+    {
         return true;
     }
-
+    
     return false;
 }
 
@@ -30,7 +34,7 @@ bool player_R()
 
 bool player_F(float & prob)
 { 
-    //std::cout << prob << std::endl;
+
     if(prob < (float)(1 - prob))
     {
         return true;

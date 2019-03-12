@@ -1,79 +1,83 @@
+#include <iostream>
+#include <iomanip>
 #include "../includes/player.h"
 #include "../includes/dado.h"
-#include <iostream>
 
-void game(int & p1, int & p2){
-    int g_score1{0}, g_score2{0}, p_score1{0}, p_score2{0},r{1}, roll{0};
-    float prob1{0}, prob2{0};
+typedef struct {
+    int g_score{0}, p_score{0};
+}PLAYER;
 
-    while(g_score1 < 100 and g_score2 < 100)
+void player_1(PLAYER & pl1)
+{
+    int roll{0};
+
+    for(int i{0}; i < 4;i++)
     {
-        if(g_score1 < 100)
+        roll = roll_dice();
+        if( roll != 1)
         {
-            for(int i{0}; i < 4;i++)
+            pl1.p_score += roll;
+            //prob1 += 0.15;
+            if((pl1.g_score + pl1.p_score) >= 100)
             {
-                roll = roll_dice();
-                if( roll != 1)
-                {
-                    p_score1 += roll;
-                    prob1 += 0.15;
-                    if((g_score1 + p_score1) >= 100)
-                    {
-                        break;
-                    }
-
-                }else
-                {
-                    p_score1 = 0;
-                    break;
-                }
+                 break;
             }
-                g_score1 += p_score1;
-                p_score1 = 0;
-                prob1 = 0;
-            
-        } 
-        if(g_score1 < 100)
+
+        }else
         {
-                while(player1(r, prob2))
-                {
-                    roll = roll_dice();
-                    if( roll != 1)
-                    {
-                        p_score2 += roll;
-                        //prob2 += 0.15;
-                        r++;
-                        if((g_score2 + p_score2) >= 100)
-                        {
-                            break;
-                        }
-
-                    }else
-                    {
-                        p_score2 = 0;
-                        break;
-                    }
-
-                }
-
-                g_score2 += p_score2;
-                p_score2 = 0;
-                prob2 = 0;
-                r = 1;
+            pl1.p_score = 0;
+            break;
         }
+    }
+    pl1.g_score += pl1.p_score;
+    pl1.p_score = 0;
+}
+
+void player_2(PLAYER & pl2)
+{
+    int roll{0}, r{1};
+    float prob{0};
+
+    while(player1(r, prob))
+    {
+        roll = roll_dice();
+        if( roll != 1)
+        {
+            pl2.p_score += roll;
+            //prob2 += 0.15;
+            r++;
+            if((pl2.g_score + pl2.p_score) >= 100)
+            {
+                 break;
+            }
+
+            }else
+            {
+                pl2.p_score = 0;
+                 break;
+            }
+
+            }
+
+            pl2.g_score += pl2.p_score;
+            pl2.p_score = 0;
+            prob = 0;
+            r = 1;
+}
+
+void game()
+{
+    PLAYER pl1, pl2;
+
+    while(pl1.g_score < 100 and pl2.g_score < 100)
+    {
+
+        player_2(pl1);
+        player_1(pl2);
 
     }
 
-    std::cout << "Jogador 1: " << g_score1 << std::endl;
-    std::cout << "Jogador 2: " << g_score2 << std::endl;
-
-    if(g_score1 > g_score2)
-    {
-        p1++;
-    }else
-    {
-        p2++;
-    }
-    
+    std::cout << "Jogador 1: " << pl1.g_score << std::endl;
+    std::cout << "Jogador 2: " << pl2.g_score << std::endl;
 
 }

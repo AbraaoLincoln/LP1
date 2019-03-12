@@ -1,6 +1,4 @@
 #include <iostream>
-#include <stdlib.h>
-#include <ctime>
 
 int roll_dice(int n_faces=6)
 {
@@ -28,7 +26,6 @@ float prob_relt(int times)
 
 float prob_dice(int rolls)
 {
-    //int trys[] = {2 , 3, 4};
     float count{0}, prob{0};
 
     for(int i{0}; i < 10;i++)
@@ -37,7 +34,6 @@ float prob_dice(int rolls)
     }
 
     prob = count / 10;    
-    //std::cout << prob;   
     return prob;
 
     /*
