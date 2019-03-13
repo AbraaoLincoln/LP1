@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <vector>
 #include "../includes/main.h"
 #include "../includes/dice.h"
 #include "../includes/game.h"
@@ -100,6 +101,18 @@ void show_scoreboard(STATUS * status)
     std::cout << "| " << "Jogador 1: " << std::setw(3) << std::setfill(' ') << status->play1_score << " |" << std::endl;
     std::cout << "| " << "Jogador 2: " << std::setw(3) << std::setfill(' ') << status->play2_score << " |" << std::endl;
     std::cout << line.str() << std::endl;
+
+    if(status->play1_score >= 100 or status->play2_score >= 100)
+    {
+        if(status->play1_score >= 100)
+        {
+            std::cout << "Play 1 wins!" << std::endl;
+        }else
+        {
+            std::cout << "Play 2 wins!" << std::endl;
+        }
+        
+    }
 }
 
 bool game_over(STATUS * status)
@@ -119,15 +132,22 @@ void player(PLAYER & play)
     dice d;
     std::string choice{""};
     int face_up{0};
+    std::vector<int> values;
 
     do
     {
 
         face_up = d.roll_dice();
+        values.push_back(face_up);
         if(face_up != 1)
         {
             play.p_score += face_up;
             std::cout << "Press enter to roll the dice or type anything to finish your turn: " << std::endl;
+            for(unsigned i{0}; i < values.size(); i++)
+            {
+                std::cout << i+1 << "-" << values[i] << ": ";
+            }
+            std::cout << "Total turn: " << play.p_score << std::endl;
             getline(std::cin, choice);
         }else
         {
