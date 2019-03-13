@@ -13,10 +13,54 @@ void play_game(STATUS * status, int & started, int & mode)
     switch(mode)
     {
         case 1:
-
+            if(started == 0)
+            {
+                std::cout << "Play 1 turn:\n";
+                player(play1);
+                status->play1_score += play1.g_score;
+                if(play1.g_score < 100)
+                {
+                    //std::cout << "PC turn:\n";
+                    player_1(play2);
+                    status->play2_score += play2.g_score;
+                }
+            }else
+            {
+                //std::cout << "PC turn:\n";
+                player_1(play2);
+                status->play2_score += play2.g_score;
+                if(play2.g_score < 100)
+                {
+                    std::cout << "Play 1 turn:\n";
+                    player(play1);
+                    status->play1_score += play1.g_score;
+                }
+            }
             break;
         case 2:
-            
+            if(started == 0)
+            {
+                std::cout << "Play 1 turn:\n";
+                player(play1);
+                status->play1_score += play1.g_score;
+                if(play1.g_score < 100)
+                {
+                    std::cout << "Play 2 turn:\n";
+                    player(play2);
+                    status->play2_score += play2.g_score;
+                }
+            }else
+            {
+                std::cout << "Play 2 turn:\n";
+                player(play2);
+                status->play2_score += play2.g_score;
+                if(play2.g_score < 100)
+                {
+                    std::cout << "Play 1 turn:\n";
+                    player(play1);
+                    status->play1_score += play1.g_score;
+                }
+            }
             break;
         case 3:
             if(started == 0)
@@ -68,6 +112,32 @@ bool game_over(STATUS * status)
         return false;
     }
     
+}
+
+void player(PLAYER & play)
+{
+    dice d;
+    std::string choice{""};
+    int face_up{0};
+
+    do
+    {
+
+        face_up = d.roll_dice();
+        if(face_up != 1)
+        {
+            play.p_score += face_up;
+            std::cout << "Press enter to roll the dice or type anything to finish your turn: " << std::endl;
+            getline(std::cin, choice);
+        }else
+        {
+            play.p_score = 0;
+            choice = "lose";
+        }
+
+    }while(choice == "");
+
+    play.g_score += play.p_score;
 }
 
 void player_1(PLAYER & play1)

@@ -12,6 +12,8 @@ void show_scoreboard(STATUS * status);
 
 bool game_over(STATUS * status);
 
+void player(PLAYER & play);
+
 void player_1(PLAYER & play1);
 
 void player_2(PLAYER & play2);
