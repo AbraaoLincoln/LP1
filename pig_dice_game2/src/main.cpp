@@ -5,6 +5,14 @@
 int main(void)
 {
     STATUS s;
-    show_scoreboard(&s);
+    int first, mode{3};
+    first = rand() % 2;
+
+    while(not game_over(&s))
+    {
+        play_game(&s, first, mode);
+        //system("clear");
+        show_scoreboard(&s);
+    }
     return EXIT_SUCCESS;
 }

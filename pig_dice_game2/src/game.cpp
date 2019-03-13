@@ -22,20 +22,20 @@ void play_game(STATUS * status, int & started, int & mode)
             if(started == 0)
             {
                 player_1(play1);
-                status->play1_score = play1.g_score;
+                status->play1_score += play1.g_score;
                 if(play1.g_score < 100)
                 {
                     player_2(play2);
-                    status->play2_score = play2.g_score;
+                    status->play2_score += play2.g_score;
                 }
             }else
             {
                 player_2(play2);
-                status->play2_score = play2.g_score;
+                status->play2_score += play2.g_score;
                 if(play2.g_score < 100)
                 {
                     player_1(play1);
-                    status->play1_score = play1.g_score;
+                    status->play1_score += play1.g_score;
                 }
             }
             
@@ -56,6 +56,18 @@ void show_scoreboard(STATUS * status)
     std::cout << "| " << "Jogador 1: " << std::setw(3) << std::setfill(' ') << status->play1_score << " |" << std::endl;
     std::cout << "| " << "Jogador 2: " << std::setw(3) << std::setfill(' ') << status->play2_score << " |" << std::endl;
     std::cout << line.str() << std::endl;
+}
+
+bool game_over(STATUS * status)
+{
+    if(status->play1_score >= 100 or status->play2_score >= 100)
+    {
+        return true;
+    }else
+    {
+        return false;
+    }
+    
 }
 
 void player_1(PLAYER & play1)
