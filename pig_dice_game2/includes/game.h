@@ -10,6 +10,8 @@ void play_game(STATUS * status, int & started, int & mode);
 
 void show_scoreboard(STATUS * status);
 
+void game_menu(int & mode);
+
 bool game_over(STATUS * status);
 
 void player(PLAYER & play);

@@ -8,6 +8,7 @@ int main(void)
     STATUS s;
     int first, mode{1};
     srand(time(NULL));
+    game_menu(mode);
     first = rand() % 2;
     std::cout << "Play " << first+1 << " start" << std::endl;
 

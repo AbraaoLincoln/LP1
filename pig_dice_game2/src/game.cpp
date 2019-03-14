@@ -115,6 +115,24 @@ void show_scoreboard(STATUS * status)
     }
 }
 
+void game_menu(int & mode)
+{
+    int size_line{24}, side{0};
+    std::ostringstream line;
+    std::string msg[3] = {"| 1 - Player VS PC ", "| 3 - PC VS PC ", "PIG DICE"};
+
+    line << std::setw(size_line) << std::setfill('=') << "=";
+    std::cout << line.str() << std::endl;
+    side = (size_line - msg[2].size()) / 2;
+    std::cout << "|" <<  std::setw((side + msg[2].size())-1) << msg[2] << std::setw(side) << "|" << std::endl;
+    std::cout << line.str() << std::endl;
+    std::cout << msg[0] << std::setw((size_line+1) - msg[0].size()) << " |\n";
+    std::cout << "| 2 - Player VS Player |\n" ;
+    std::cout << msg[1] << std::setw((size_line+1) - msg[1].size())<< " |\n";
+    std::cout << line.str() << std::endl;
+    std::cin >> mode;
+}
+
 bool game_over(STATUS * status)
 {
     if(status->play1_score >= 100 or status->play2_score >= 100)
@@ -151,6 +169,7 @@ void player(PLAYER & play)
             getline(std::cin, choice);
         }else
         {
+            std::cout << "Dice face = 1 you lose!" << std::endl;
             play.p_score = 0;
             choice = "lose";
         }
