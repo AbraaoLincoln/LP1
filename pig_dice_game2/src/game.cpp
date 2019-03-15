@@ -16,7 +16,7 @@ void play_game(STATUS * status, int & started, int & mode)
         case 1:
             if(started == 0)
             {
-                std::cout << "Play 1 turn:\n";
+                std::cout << BLUE << "Play 1 turn:\n" << RESET;
                 player(play1);
                 status->play1_score += play1.g_score;
                 if(play1.g_score < 100)
@@ -41,23 +41,23 @@ void play_game(STATUS * status, int & started, int & mode)
         case 2:
             if(started == 0)
             {
-                std::cout << "Play 1 turn:\n";
+                std::cout << BLUE <<"Play 1 turn:\n" << RESET;
                 player(play1);
                 status->play1_score += play1.g_score;
-                if(play1.g_score < 100)
+                if(status->play1_score < 100)
                 {
-                    std::cout << "Play 2 turn:\n";
+                    std::cout << BLUE << "Play 2 turn:\n" << RESET;
                     player(play2);
                     status->play2_score += play2.g_score;
                 }
             }else
             {
-                std::cout << "Play 2 turn:\n";
+                std::cout << BLUE <<"Play 2 turn:\n" << RESET;
                 player(play2);
                 status->play2_score += play2.g_score;
-                if(play2.g_score < 100)
+                if(status->play2_score < 100)
                 {
-                    std::cout << "Play 1 turn:\n";
+                    std::cout << BLUE << "Play 1 turn:\n" << RESET;
                     player(play1);
                     status->play1_score += play1.g_score;
                 }
@@ -119,7 +119,7 @@ void game_menu(int & mode)
 {
     int size_line{24}, side{0};
     std::ostringstream line;
-    std::string msg[3] = {"| 1 - Player VS PC ", "| 3 - PC VS PC ", "PIG DICE"};
+    std::string m, msg[3] = {"| 1 - Player VS PC ", "| 3 - PC VS PC ", "PIG DICE"};
 
     line << std::setw(size_line) << std::setfill('=') << "=";
     std::cout << line.str() << std::endl;
@@ -130,7 +130,9 @@ void game_menu(int & mode)
     std::cout << "| 2 - Player VS Player |\n" ;
     std::cout << msg[1] << std::setw((size_line+1) - msg[1].size())<< " |\n";
     std::cout << line.str() << std::endl;
-    std::cin >> mode;
+    getline(std::cin, m);
+    std::istringstream stream(m);
+    stream >> mode;
 }
 
 bool game_over(STATUS * status)
@@ -169,14 +171,14 @@ void player(PLAYER & play)
             getline(std::cin, choice);
         }else
         {
-            std::cout << "Dice face = 1 you lose!" << std::endl;
+            std::cout << RED << "Dice face = 1 you lose!" << RESET << std::endl;
             play.p_score = 0;
             choice = "lose";
         }
 
     }while(choice == "");
 
-    play.g_score += play.p_score;
+    play.g_score = play.p_score;
 }
 
 void player_1(PLAYER & play1)
