@@ -7,7 +7,7 @@
 #include "../includes/game.h"
 #include "../includes/pc_player.h"
 
-void play_game(STATUS * status, int & started, int & mode)
+void play_game(status & sts, int & started, int & mode)
 {
     PLAYER play1, play2;
 
@@ -18,23 +18,23 @@ void play_game(STATUS * status, int & started, int & mode)
             {
                 std::cout << BLUE << "Play 1 turn:\n" << RESET;
                 player(play1);
-                status->play1_score += play1.g_score;
+                sts.play1_score += play1.g_score;
                 if(play1.g_score < 100)
                 {
                     //std::cout << "PC turn:\n";
                     player_1(play2);
-                    status->play2_score += play2.g_score;
+                    sts.play2_score += play2.g_score;
                 }
             }else
             {
                 //std::cout << "PC turn:\n";
                 player_1(play2);
-                status->play2_score += play2.g_score;
+                sts.play2_score += play2.g_score;
                 if(play2.g_score < 100)
                 {
                     std::cout << "Play 1 turn:\n";
                     player(play1);
-                    status->play1_score += play1.g_score;
+                    sts.play1_score += play1.g_score;
                 }
             }
             break;
@@ -43,23 +43,23 @@ void play_game(STATUS * status, int & started, int & mode)
             {
                 std::cout << BLUE <<"Play 1 turn:\n" << RESET;
                 player(play1);
-                status->play1_score += play1.g_score;
-                if(status->play1_score < 100)
+                sts.play1_score += play1.g_score;
+                if(sts.play1_score < 100)
                 {
                     std::cout << BLUE << "Play 2 turn:\n" << RESET;
                     player(play2);
-                    status->play2_score += play2.g_score;
+                    sts.play2_score += play2.g_score;
                 }
             }else
             {
                 std::cout << BLUE <<"Play 2 turn:\n" << RESET;
                 player(play2);
-                status->play2_score += play2.g_score;
-                if(status->play2_score < 100)
+                sts.play2_score += play2.g_score;
+                if(sts.play2_score < 100)
                 {
                     std::cout << BLUE << "Play 1 turn:\n" << RESET;
                     player(play1);
-                    status->play1_score += play1.g_score;
+                    sts.play1_score += play1.g_score;
                 }
             }
             break;
@@ -67,20 +67,20 @@ void play_game(STATUS * status, int & started, int & mode)
             if(started == 0)
             {
                 player_1(play1);
-                status->play1_score += play1.g_score;
+                sts.play1_score += play1.g_score;
                 if(play1.g_score < 100)
                 {
                     player_2(play2);
-                    status->play2_score += play2.g_score;
+                    sts.play2_score += play2.g_score;
                 }
             }else
             {
                 player_2(play2);
-                status->play2_score += play2.g_score;
+                sts.play2_score += play2.g_score;
                 if(play2.g_score < 100)
                 {
                     player_1(play1);
-                    status->play1_score += play1.g_score;
+                    sts.play1_score += play1.g_score;
                 }
             }
             
@@ -90,7 +90,7 @@ void play_game(STATUS * status, int & started, int & mode)
     }
 }
 
-void show_scoreboard(STATUS * status)
+void show_scoreboard(status & sts)
 {
     std::ostringstream line;
 
@@ -98,13 +98,13 @@ void show_scoreboard(STATUS * status)
     std::cout << line.str() << std::endl;
     std::cout << "|   " << "SCOREBOARD" << "   |" << std::endl;
     std::cout << line.str() << std::endl;
-    std::cout << "| " << "Jogador 1: " << std::setw(3) << std::setfill(' ') << status->play1_score << " |" << std::endl;
-    std::cout << "| " << "Jogador 2: " << std::setw(3) << std::setfill(' ') << status->play2_score << " |" << std::endl;
+    std::cout << "| " << "Jogador 1: " << std::setw(3) << std::setfill(' ') << sts.play1_score << " |" << std::endl;
+    std::cout << "| " << "Jogador 2: " << std::setw(3) << std::setfill(' ') << sts.play2_score << " |" << std::endl;
     std::cout << line.str() << std::endl;
 
-    if(status->play1_score >= 100 or status->play2_score >= 100)
+    if(sts.play1_score >= 100 or sts.play2_score >= 100)
     {
-        if(status->play1_score >= 100)
+        if(sts.play1_score >= 100)
         {
             std::cout << "Play 1 wins!" << std::endl;
         }else
@@ -135,9 +135,9 @@ void game_menu(int & mode)
     stream >> mode;
 }
 
-bool game_over(STATUS * status)
+bool game_over(status & sts)
 {
-    if(status->play1_score >= 100 or status->play2_score >= 100)
+    if(sts.play1_score >= 100 or sts.play2_score >= 100)
     {
         return true;
     }else

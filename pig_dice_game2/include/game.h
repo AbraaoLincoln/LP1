@@ -11,18 +11,18 @@
 #define CYAN    "\033[36m"      /* Cyan */
 #define WHITE   "\033[37m"
 
-typedef struct
+struct PLAYER
 {
     int g_score{0}, p_score{0};
-}PLAYER;
+};
 
-void play_game(STATUS * status, int & started, int & mode);
+void play_game(status & sts, int & started, int & mode);
 
-void show_scoreboard(STATUS * status);
+void show_scoreboard(status & sts);
 
 void game_menu(int & mode);
 
-bool game_over(STATUS * status);
+bool game_over(status & sts);
 
 void player(PLAYER & play);
 
