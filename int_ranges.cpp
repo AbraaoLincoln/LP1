@@ -116,7 +116,30 @@ namespace ir {
 
     int * unique ( int * first , int * last )
     {
+        int size = last - first, value{0}, aux{0};
+        int *first_local{first}, *last_local{last}, *first1{first};
 
+        while(first != last_local)
+        {
+            value = *first;
+            first_local++;
+
+            for(auto i{first_local}; i < last_local;i++)
+            {
+                if(*i == value)
+                {
+                    std::swap(*i, *last_local);
+                    //aux = *last_local;
+                    //*last_local = *i;
+                    //*i = aux;
+                    size--;
+                    last_local = first1 + size;
+                }
+            }
+            first++;
+            first_local = first;
+        }
+        return first;
     }
 
 }
