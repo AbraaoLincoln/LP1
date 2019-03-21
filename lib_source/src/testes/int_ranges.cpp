@@ -103,9 +103,10 @@ const int * min( const int* first, const int* last )
 
     int * unique ( int * first , int * last )
     {
-        int size = (last - first)-1, value{0}, aux{0};
-        int *first_local{first}, *last_local{first + size}, *first1{first};
-
+        int size = (last - first)-1, value{0};
+        int *first_local{first}, *last_local{first + size}, *first1{first}, *first2{first};
+        last = first1 + size;
+        /*
         while(first != last_local)
         {
             value = *first;
@@ -115,16 +116,46 @@ const int * min( const int* first, const int* last )
             {
                 if(*i == value)
                 {
-                    std::swap(*i, *last_local);
-                    //aux = *last_local;
-                    //*last_local = *i;
-                    //*i = aux;
-                    size--;
-                    last_local = first1 + size;
+                    while(true)
+                    {
+                        if(*i != *last_local)
+                        {
+                            std::swap(*i, *last_local);
+                            size--;
+                            last_local = first1 + size; 
+                            break;
+                        }else
+                        {
+                            size--;
+                            last_local = first1 + size;
+                        }
+                    }
+                    
                 }
             }
             first++;
             first_local = first;
         }
+        */
+
+       while(first != last)
+       {
+           value = *first;
+           first_local++;
+           for(auto i{first_local}; i < last;i++){
+               if(*i == value)
+               {
+                   for(auto j{i}; j < last;j++)
+                   {
+                       std::swap(*j, *j++);
+                   }
+                   size--;
+                   last = first1 + size;
+               }
+           }
+           first++;
+           first_local = first;
+       }
+
         return first;
     }

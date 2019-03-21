@@ -62,6 +62,7 @@ int main(void)
     */
     int *teste;
     int A[] = {1, 2, 1, 2, 3, 3, 1, 2, 4, 5, 3, 4, 5}; // teste unique
+    //int A[] = {1,2,1,3,2};
     teste = unique(std::begin(A), std::end(A));
     for(auto i : A)
     {
