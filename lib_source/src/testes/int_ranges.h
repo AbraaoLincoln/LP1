@@ -11,3 +11,7 @@ int dot_product ( const int * a_first , const int * a_last , const int * b_first
 int* compact(int *first, int *last);
 
 int * unique ( int * first , int * last );
+
+int* sort_marbles( int * first , int * last );
+
+void partition( int * first , int * last , int * pivot);

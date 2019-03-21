@@ -60,14 +60,31 @@ int main(void)
     }
     std::cout << *teste <<std::endl;
     */
-    int *teste;
+   /*
     int A[] = {1, 2, 1, 2, 3, 3, 1, 2, 4, 5, 3, 4, 5}; // teste unique
     //int A[] = {1,2,1,3,2};
-    teste = unique(std::begin(A), std::end(A));
+    auto teste = unique(std::begin(A), std::end(A)); //ok
     for(auto i : A)
     {
         std::cout << i << " ";
     }
     std::cout << std::endl;
+    */
+   /*
+    int A[] = {1, 0, 1, 0, 1, 0, 1, 1, 0, 1};
+    auto teste = sort_marbles(std::begin(A), std::end(A)); //ok
+    for(auto c : A)
+    {
+        std::cout << c << " ";
+    }
+    std::cout << "\n";
+    */
+    int A[] = {-5, 7, 10, 7, 8, 9, 1, 7, -2, 3};
+    partition(std::begin(A), std::end(A), std::begin(A)+1);
+    for(auto c : A)
+    {
+        std::cout << c  << " ";
+    }
+    std::cout << "\n";
     return 0;
 }

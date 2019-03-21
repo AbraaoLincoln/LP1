@@ -104,39 +104,8 @@ const int * min( const int* first, const int* last )
     int * unique ( int * first , int * last )
     {
         int size = (last - first)-1, value{0};
-        int *first_local{first}, *last_local{first + size}, *first1{first}, *first2{first};
-        last = first1 + size;
-        /*
-        while(first != last_local)
-        {
-            value = *first;
-            first_local++;
-
-            for(auto i{first_local}; i < last_local;i++)
-            {
-                if(*i == value)
-                {
-                    while(true)
-                    {
-                        if(*i != *last_local)
-                        {
-                            std::swap(*i, *last_local);
-                            size--;
-                            last_local = first1 + size; 
-                            break;
-                        }else
-                        {
-                            size--;
-                            last_local = first1 + size;
-                        }
-                    }
-                    
-                }
-            }
-            first++;
-            first_local = first;
-        }
-        */
+        int *first_local{first}, *first1{first}, *x;
+        last = first1 + size; 
 
        while(first != last)
        {
@@ -147,7 +116,8 @@ const int * min( const int* first, const int* last )
                {
                    for(auto j{i}; j < last;j++)
                    {
-                       std::swap(*j, *j++);
+                       x = j + 1;
+                       std::swap(*j, *x);
                    }
                    size--;
                    last = first1 + size;
@@ -158,4 +128,66 @@ const int * min( const int* first, const int* last )
        }
 
         return first;
+    }
+
+    int* sort_marbles( int * first , int * last )
+    {
+        while(first != last)
+        {
+            if(*first == 1)
+            {
+                for(auto i{first}; i < last; ++i)
+                {
+                    if(*i == 0)
+                    {
+                        std::swap(*i, *first);
+                        break;
+                    }
+                }
+            }
+            first++;
+
+        }
+        return first;
+    }
+
+    void partition( int * first , int * last , int * pivot)
+    {
+        //{-5, 7, 10, 7, 8, 9, 1, 7, -2, 3}
+        auto n = *pivot;
+        int *iterator;
+        while(first != last)
+        {
+            if(*first >= n)
+            {
+                for(auto i{first}; i < last; ++i)
+                {
+                    if(*i < n)
+                    {
+                        std::swap(*i, *first);
+                        iterator = first;
+                        break;
+                    }
+                }
+
+            }
+            first++;
+        }
+        iterator++;
+        //std::cout << *iterator << std::endl;
+        while(iterator != last)
+        {
+            if(*iterator > n)
+            {
+                for(auto i{iterator}; i < last; ++i)
+                {
+                    if(*i == n)
+                    {
+                        std::swap(*i, *iterator);
+                        break;
+                    }
+                }
+            }
+            iterator++;
+        }
     }
