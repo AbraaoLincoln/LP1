@@ -2,11 +2,17 @@
 #include <iomanip>
 #include <sstream>
 #include <vector>
-#include "../includes/main.h"
-#include "../includes/dice.h"
-#include "../includes/game.h"
-#include "../includes/pc_player.h"
+#include "../include/main.h"
+#include "../include/dice.h"
+#include "../include/game.h"
+#include "../include/pc_player.h"
 
+int game_start(int & first)
+{
+    first = rand() % 2;
+    std::cout << "Play " << first+1 << " start" << std::endl;
+    return first;
+}
 void play_game(status & sts, int & started, int & mode)
 {
     PLAYER play1, play2;
@@ -46,13 +52,13 @@ void play_game(status & sts, int & started, int & mode)
                 sts.play1_score += play1.g_score;
                 if(sts.play1_score < 100)
                 {
-                    std::cout << BLUE << "Play 2 turn:\n" << RESET;
+                    std::cout << GREEN << "Play 2 turn:\n" << RESET;
                     player(play2);
                     sts.play2_score += play2.g_score;
                 }
             }else
             {
-                std::cout << BLUE <<"Play 2 turn:\n" << RESET;
+                std::cout << GREEN <<"Play 2 turn:\n" << RESET;
                 player(play2);
                 sts.play2_score += play2.g_score;
                 if(sts.play2_score < 100)

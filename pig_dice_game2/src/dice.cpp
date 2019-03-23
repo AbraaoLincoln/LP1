@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../includes/dice.h"
+#include "../include/dice.h"
 
 int dice::roll_dice(int n_faces)
 {

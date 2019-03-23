@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../includes/dice.h"
-#include "../includes/pc_player.h"
+#include "../include/dice.h"
+#include "../include/pc_player.h"
 
 bool pc_player::player_prob(int t, float & prob )
 {

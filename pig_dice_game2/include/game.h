@@ -22,6 +22,8 @@ void show_scoreboard(status & sts);
 
 void game_menu(int & mode);
 
+int game_start(int & first);
+
 bool game_over(status & sts);
 
 void player(PLAYER & play);
