@@ -153,7 +153,6 @@ const int * min( const int* first, const int* last )
 
     void partition( int * first , int * last , int * pivot)
     {
-        //{-5, 7, 10, 7, 8, 9, 1, 7, -2, 3}
         auto n = *pivot;
         int *iterator;
         while(first != last)
@@ -174,7 +173,7 @@ const int * min( const int* first, const int* last )
             first++;
         }
         iterator++;
-        //std::cout << *iterator << std::endl;
+
         while(iterator != last)
         {
             if(*iterator > n)
@@ -189,5 +188,25 @@ const int * min( const int* first, const int* last )
                 }
             }
             iterator++;
+        }
+    }
+
+    void rotate( int * first , int * n_first , int * last )
+    {
+        auto qtd{n_first - first}, local_last{(last - first)-1};
+        //std::cout << qtd << *first << *n_first << "\n";
+        //std::cout << qtd << local_last << "\n";
+        int *local_first{first}, *aux;
+
+        for(auto i{0}; i < qtd;i++)
+        {
+            for(auto j{0}; j < local_last;j++)
+            {
+                aux = local_first + 1;
+                std::cout << *local_first << *aux << "\n";
+                std::swap(*local_first, *aux);
+                local_first++;
+            }
+            local_first = first;
         }
     }

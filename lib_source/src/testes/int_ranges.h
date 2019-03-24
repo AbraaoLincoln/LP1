@@ -15,3 +15,5 @@ int * unique ( int * first , int * last );
 int* sort_marbles( int * first , int * last );
 
 void partition( int * first , int * last , int * pivot);
+
+void rotate( int * first , int * n_first , int * last );

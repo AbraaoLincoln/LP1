@@ -40,7 +40,7 @@ int main(void)
     n = dot_product(&Vet[0], &Vet[3], &Vet[3]);
     std::cout << n << "\n";
     */
-   /*
+    /*
     int *teste;
     int Vet[] = {-2, -8, 2, 7, -3, 10, 1, 0, -3, 7}; // teste compact
     teste = compact(&Vet[0], &Vet[10]);
@@ -79,6 +79,7 @@ int main(void)
     }
     std::cout << "\n";
     */
+    /*
     int A[] = {-5, 7, 10, 7, 8, 9, 1, 7, -2, 3};
     partition(std::begin(A), std::end(A), std::begin(A)+1);
     for(auto c : A)
@@ -86,5 +87,16 @@ int main(void)
         std::cout << c  << " ";
     }
     std::cout << "\n";
+    */
+
+   int A[] = { 1 , 2 , 3 , 4 , 5 , 6 };
+   //int A[] = { 1, 2, 3, 4, 5, 6 };
+   //rotate( std::begin(A), std::begin(A)+1, std::end(A) );
+   rotate( std::begin(A) , std::begin(A)+2 , std::end(A));
+   for(auto c : A)
+   {
+       std::cout << c << " ";
+   }
+   std::cout << std::endl;
     return 0;
 }
