@@ -1,0 +1,3 @@
+/home/abraao/Documents/programing/LP1/pig_dice_game2/build/CMakeFiles/rebuild_cache.dir
+/home/abraao/Documents/programing/LP1/pig_dice_game2/build/CMakeFiles/jogo.dir
+/home/abraao/Documents/programing/LP1/pig_dice_game2/build/CMakeFiles/edit_cache.dir

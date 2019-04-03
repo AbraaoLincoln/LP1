@@ -104,8 +104,8 @@ void show_scoreboard(status & sts)
     std::cout << line.str() << std::endl;
     std::cout << "|   " << "SCOREBOARD" << "   |" << std::endl;
     std::cout << line.str() << std::endl;
-    std::cout << "| " << "Jogador 1: " << std::setw(3) << std::setfill(' ') << sts.play1_score << " |" << std::endl;
-    std::cout << "| " << "Jogador 2: " << std::setw(3) << std::setfill(' ') << sts.play2_score << " |" << std::endl;
+    std::cout << "| " << "Player 1:  " << std::setw(3) << std::setfill(' ') << sts.play1_score << " |" << std::endl;
+    std::cout << "| " << "Player 2:  " << std::setw(3) << std::setfill(' ') << sts.play2_score << " |" << std::endl;
     std::cout << line.str() << std::endl;
 
     if(sts.play1_score >= 100 or sts.play2_score >= 100)
@@ -165,6 +165,7 @@ void player(PLAYER & play)
 
         face_up = d.roll_dice();
         values.push_back(face_up);
+        d.show_face(face_up);
         if(face_up != 1)
         {
             play.p_score += face_up;
@@ -177,7 +178,7 @@ void player(PLAYER & play)
             getline(std::cin, choice);
         }else
         {
-            std::cout << RED << "Dice face = 1 you lose!" << RESET << std::endl;
+            std::cout << RED << "Dice face = 1, you lose!" << RESET << std::endl;
             play.p_score = 0;
             choice = "lose";
         }

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/jogo.dir/src/dice.cpp.o CMakeFiles/jogo.dir/src/game.cpp.o CMakeFiles/jogo.dir/src/main.cpp.o CMakeFiles/jogo.dir/src/pc_player.cpp.o  -o jogo 
