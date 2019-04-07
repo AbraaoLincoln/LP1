@@ -12,6 +12,9 @@ namespace graal{
     const void * min( const void *first , const void *last , size_t size , Compare cmp );  
 
     void reverse(void *first, void *last, size_t size);
+    
+    void* copy(void *first, void *last, void *d_first,size_t size);
+
       
 }
 

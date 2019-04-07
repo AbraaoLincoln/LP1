@@ -65,11 +65,22 @@ namespace graal{
     //Funcao copy, copia todos os elemetos de um intervalo para outro intervalor.
         //first, ponteiro para o primeiro elemento do intervalo.
         //last, ponteiro para o ultimo elemento mais um.
+        //d_first, ponterio para a primira posicao para onde a copia vai ser feita.
         //size, tamanho do tipo dos dados que estao no intervalo.
         //return, ponterio para a ultima posicao mais um do novo intervalo.
-    void* copy(void *first, void *last, size_t size)
+    void* copy(void *first, void *last, void *d_first,size_t size)
     {
-        
+        byte *pf = (byte *)first;
+        byte *p_df = (byte *)d_first;
+
+        while(pf != last)
+        {
+            std::memcpy(p_df, pf, size);
+            pf += size;
+            p_df += size;
+        }
+
+        return pf;
     }
 }
 
