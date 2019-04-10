@@ -3,6 +3,7 @@
 #include <cstring>
 
 namespace graal{
+
     //Funcao swap, troca elementos de posicao na memoria.
         //x, ponterio para o primeiro elemento da troca.
         //y, ponteiro para o segundo elemento da troca.
@@ -82,5 +83,76 @@ namespace graal{
 
         return pf;
     }
+
+    //Funcao clone, cria um clone do intervalo passado
+        //first, ponteiro para a primaira posicao do intervalo
+        //last, ponteiro para a ultima posica mais um.
+        //size, tamanho em bytes do tipo de dados do intervalo
+        //return, ponteiro para o inicio do clone
+    void * clone ( const void * first , const void * last , size_t size )
+    {
+        byte *pf = (byte *)first;
+        byte *pl = (byte *)last;
+        int qtd{pl - pf};
+        byte clone[(qtd*size)];
+        byte *pc = clone;
+
+        while(pf !=last)
+        {
+            //std::cout << "1\n";
+            std::memcpy(pc, pf, size);
+            //std::cout << (int)*pc << std::endl;
+            pc += size;
+            pf += size;
+        }
+
+        return clone;
+    }
+
+    //Funcao find_if, encontar o elemento que satisfa a condicao
+        //first, ponteiro para a primaira posicao do intervalo
+        //last, ponteiro para a ultima posica mais um.
+        //size, tamanho em bytes do tipo de dados do intervalo
+        //return, ponteiro para o o primeiro elemento para o qual a funcao p retorne true e last se nenhum elemento satisfazer a condicao.
+    const void * find_if ( const void * first , const void * last , size_t size , Predicate p )
+    {
+        byte *pf = (byte *)first;
+
+        while(pf != last)
+        {
+            if(p(pf))
+            {
+                return pf;
+            }
+            pf += size;
+        }
+
+        return last;
+    }
+
+    //Funcao find, encontra o elemento que é igual ao valorpassado.
+        //first, ponteiro para a primaira posicao do intervalo
+        //last, ponteiro para a ultima posica mais um.
+        //size, tamanho em bytes do tipo de dados do intervalo
+        //value, valor que sera procurado no intervalo.
+        //eq, funcao de comparacao.
+        //return, ponteiro para o elemento que e igual ao valor passado, se nao encontrar retorna last.
+    const void *find ( const void * first , const void * last , size_t size , const void * value , Equal eq )
+    {
+        byte *pf = (byte *)first;
+
+        while(pf != last)
+        {
+            //std::cout << (float)*pf << std::endl;
+            if(eq(value, pf))
+            {
+                return pf;
+            }
+            pf += size;
+        }
+
+        return last;
+    }
+
 }
 

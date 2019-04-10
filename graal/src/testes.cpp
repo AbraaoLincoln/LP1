@@ -29,6 +29,44 @@ bool cmp_float(void *a, void *b)
     auto *pb = (float *)b;
     return *pa < *pb;
 }
+bool p_int(void *a)
+{
+    int *pa = (int *)a;
+    return *pa < 3;
+}
+
+bool p_float(void *a)
+{
+    float *pa = (float *)a;
+    return *pa > 1.9;
+}
+
+bool p_char(void *a)
+{
+    char *pa = (char *)a;
+    return *pa < 'c';
+}
+
+bool eq_int(const void *a, void *b)
+{
+    int *pa = (int *)a;
+    int *pb = (int *)b;
+    return *pa == *pb;
+}
+
+bool eq_float(const void *a, void *b)
+{
+    float *pa = (float *)a;
+    float *pb = (float *)b;
+    return *pa == *pb;
+}
+
+bool eq_char(const void *a, void *b)
+{
+    char *pa = (char *)a;
+    char *pb = (char *)b;
+    return *pa == *pb;
+}
 
 int main(void)
 {
@@ -153,5 +191,93 @@ int main(void)
         std::cout << "\n";
         //teste com float
         //teste com char
+    std::cout << std::setw(20) << std::setfill('=') << "\n";    
+    //testes clone
+    //std::cout << "Teste clone" << std::endl;
+        //teste com int
+        /*
+        std::cout << "Teste copy com int: " << std::endl;
+        std::cout << "Antes: ";
+        for(auto c : A_int)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto clone = (int*) graal::clone(std::begin(A_int), std::end(A_int), sizeof(int));
+        std::cout << "Depois: ";
+        for(auto i{0}; i < 5;i++)
+        {
+            std::cout << *clone << std::endl;
+            clone++;
+        }
+        std::cout << "\n";
+        */
+    //teste find_if
+        //teste para int
+        std::cout << "Teste find_if com int: " << std::endl;
+        std::cout << "A: ";
+        for(auto c : A_int)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto find_0 = (int*) graal::find_if(std::begin(A_int), std::end(A_int), sizeof(int), p_int);
+        std::cout << "Valores menor que 3 em A: " << *find_0 << std::endl;
+        //teste para float
+        std::cout << "Teste find_if com float: " << std::endl;
+        std::cout << "A: ";
+        for(auto c : A_float)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto find_1 = (float*) graal::find_if(std::begin(A_float), std::end(A_float), sizeof(float), p_float);
+        std::cout << "Valores maior que 1.9 em A: " << *find_1 << std::endl;
+        //teste para char
+        std::cout << "Teste find_if com char: " << std::endl;
+        std::cout << "A: ";
+        for(auto c : A_char)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto find_2 = (char*) graal::find_if(std::begin(A_char), std::end(A_char), sizeof(char), p_char);
+        std::cout << "Valores maior que c em A: " << *find_2 << std::endl;
+        std::cout << std::setw(20) << std::setfill('=') << "\n";
+    //teste find
+        //teste para int
+        std::cout << "Teste find com int: " << std::endl;
+        std::cout << "A: ";
+        for(auto c : A_int)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto value_i = 2;
+        auto find0 = (int*) graal::find(std::begin(A_int), std::end(A_int), sizeof(int), &value_i, eq_int);
+        std::cout << "Valores iguais que 2 em A: " << *find0 << std::endl;
+        //teste para float
+        std::cout << "Teste find com float: " << std::endl;
+        std::cout << "A: ";
+        for(auto c : A_float)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto value_f{1.1};
+        auto find1 = (float*) graal::find(std::begin(A_float), std::end(A_float), sizeof(float), &value_f , eq_float);
+        std::cout << "Valores iguais a 1.1 em A: " << *find1 << std::endl;
+        //teste com char
+        std::cout << "Teste find com char: " << std::endl;
+        std::cout << "A: ";
+        for(auto c : A_char)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+        auto value_c{'a'};
+        auto find2 = (char*) graal::find(std::begin(A_char), std::end(A_char), sizeof(char), &value_c, eq_char);
+        std::cout << "Valores igual a a em A: " << *find2 << std::endl;
+        std::cout << std::setw(20) << std::setfill('=') << "\n";
     return 0;
 }

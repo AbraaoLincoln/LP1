@@ -4,6 +4,8 @@
 #include <cstring>
 using byte = unsigned char;
 using Compare = bool (*)(void *a, void *b);
+using Predicate = bool (*)(void *a);
+using Equal = bool (*)(const void *a, void *b);
 
 namespace graal{
 
@@ -15,7 +17,15 @@ namespace graal{
     
     void* copy(void *first, void *last, void *d_first,size_t size);
 
-      
+    void * clone ( const void * first , const void * last , size_t size );
+
+    const void * find_if ( const void * first , const void * last , size_t size , Predicate p );
+
+    const void *find ( const void * first , const void * last , size_t size , const void * value , Equal eq );
+
+    
+
+
 }
 
 
