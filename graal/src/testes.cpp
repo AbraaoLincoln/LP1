@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iterator>
 #include <iomanip>
+#include <assert.h>
 #include "../include/graal.h"
 
 void print_array(void *first, void *last, size_t sz)
@@ -32,19 +33,19 @@ bool cmp_float(void *a, void *b)
 bool p_int(void *a)
 {
     int *pa = (int *)a;
-    return *pa < 3;
+    return *pa < 6;
 }
 
 bool p_float(void *a)
 {
     float *pa = (float *)a;
-    return *pa > 1.9;
+    return *pa < 100;
 }
 
 bool p_char(void *a)
 {
     char *pa = (char *)a;
-    return *pa < 'c';
+    return *pa < 'f';
 }
 
 bool eq_int(const void *a, void *b)
@@ -194,9 +195,8 @@ int main(void)
     std::cout << std::setw(20) << std::setfill('=') << "\n";    
     //testes clone
     //std::cout << "Teste clone" << std::endl;
-        //teste com int
-        /*
-        std::cout << "Teste copy com int: " << std::endl;
+        //teste com int       
+        std::cout << "Teste clone com int: " << std::endl;
         std::cout << "Antes: ";
         for(auto c : A_int)
         {
@@ -205,13 +205,13 @@ int main(void)
         std::cout << "\n";
         auto clone = (int*) graal::clone(std::begin(A_int), std::end(A_int), sizeof(int));
         std::cout << "Depois: ";
-        for(auto i{0}; i < 5;i++)
+        for(auto i{clone}; *i != *(std::end(A_int)-1);i++)
         {
-            std::cout << *clone << std::endl;
-            clone++;
+            std::cout << *i << " ";
         }
+        delete[] clone;
         std::cout << "\n";
-        */
+        std::cout << std::setw(20) << std::setfill('=') << "\n"; 
     //teste find_if
         //teste para int
         std::cout << "Teste find_if com int: " << std::endl;
@@ -256,6 +256,7 @@ int main(void)
         auto value_i = 2;
         auto find0 = (int*) graal::find(std::begin(A_int), std::end(A_int), sizeof(int), &value_i, eq_int);
         std::cout << "Valores iguais que 2 em A: " << *find0 << std::endl;
+        assert(value_i == *find0);
         //teste para float
         std::cout << "Teste find com float: " << std::endl;
         std::cout << "A: ";
@@ -264,9 +265,10 @@ int main(void)
             std::cout << c << " ";
         }
         std::cout << "\n";
-        auto value_f{1.1};
+        float value_f{1.1};
         auto find1 = (float*) graal::find(std::begin(A_float), std::end(A_float), sizeof(float), &value_f , eq_float);
         std::cout << "Valores iguais a 1.1 em A: " << *find1 << std::endl;
+        assert(value_f == *find1);
         //teste com char
         std::cout << "Teste find com char: " << std::endl;
         std::cout << "A: ";
@@ -278,6 +280,37 @@ int main(void)
         auto value_c{'a'};
         auto find2 = (char*) graal::find(std::begin(A_char), std::end(A_char), sizeof(char), &value_c, eq_char);
         std::cout << "Valores igual a a em A: " << *find2 << std::endl;
+        assert(value_c == *find2);
         std::cout << std::setw(20) << std::setfill('=') << "\n";
+    //testes all_of, any_of, none_of
+        //teste all_of int
+        auto all1 = graal::all_of(std::begin(A_int), std::end(A_int), sizeof(int), p_int);
+        assert(all1==true);
+        //teste all_of float
+        auto all2 = graal::all_of(std::begin(A_float), std::end(A_float), sizeof(float), p_float);
+        assert(all2==true);
+        //teste all_of char
+        auto all3 = graal::all_of(std::begin(A_char), std::end(A_char), sizeof(char), p_char);
+        assert(all3==true);
+    //teste any_of
+        //teste para int
+        auto any1 = graal::any_of(std::begin(A_int), std::end(A_int), sizeof(int), p_int);
+        assert(any1==true);
+        //teste para float
+        auto any2 = graal::any_of(std::begin(A_float), std::end(A_float), sizeof(float), p_float);
+        assert(any2==true);
+        //teste para char
+        auto any3 = graal::any_of(std::begin(A_char), std::end(A_char), sizeof(char), p_char);
+        assert(any3==true);
+    //teste none_of
+        //teste para int
+        auto none1 = graal::none_of(std::begin(A_int), std::end(A_int), sizeof(int), p_int);
+        assert(none1==false);
+        //teste para float
+        auto none2 = graal::none_of(std::begin(A_float), std::end(A_float), sizeof(float), p_float);
+        assert(none2==false);
+        //teste para char
+        auto none3 = graal::none_of(std::begin(A_char), std::end(A_char), sizeof(char), p_char);
+        assert(none3==false);
     return 0;
 }

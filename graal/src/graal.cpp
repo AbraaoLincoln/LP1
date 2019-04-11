@@ -94,19 +94,18 @@ namespace graal{
         byte *pf = (byte *)first;
         byte *pl = (byte *)last;
         int qtd{pl - pf};
-        byte clone[(qtd*size)];
-        byte *pc = clone;
+        byte *pc;
+        pc = new byte [(qtd*size)];
+        byte *pr{pc};
 
-        while(pf !=last)
+        while(pf != last)
         {
-            //std::cout << "1\n";
             std::memcpy(pc, pf, size);
-            //std::cout << (int)*pc << std::endl;
             pc += size;
             pf += size;
         }
 
-        return clone;
+        return pr;
     }
 
     //Funcao find_if, encontar o elemento que satisfa a condicao
@@ -153,6 +152,76 @@ namespace graal{
 
         return last;
     }
+    //funcao all_of
+        //first, ponteiro para a primaira posicao do intervalo
+        //last, ponteiro para a ultima posica mais um.
+        //size, tamanho em bytes do tipo de dados do intervalo
+        //return, true se todos os elementos retornar verdadeiro para p
+    bool all_of ( const void * first , const void * last , size_t size , Predicate p )
+    {
+        byte *pf = (byte *)first;
 
+        while(pf != last)
+        {
+            if(p(pf))
+            {
+                pf += size;
+            }else
+            {
+                return false;
+            }
+            
+        }
+
+        return true;
+    }
+
+    //funcao any_of
+        //first, ponteiro para a primaira posicao do intervalo
+        //last, ponteiro para a ultima posica mais um.
+        //size, tamanho em bytes do tipo de dados do intervalo
+        //return, true se pelo menos um elemento retornar verdadeiro para p
+    bool any_of ( const void * first , const void * last , size_t size , Predicate p )
+    {
+        byte *pf = (byte *)first;
+
+        while(pf != last)
+        {
+            if(p(pf))
+            {
+                return true;
+            }else
+            {
+                pf += size;
+            }
+            
+        }
+
+        return false;
+    }
+    
+    //funcao none_of
+        //first, ponteiro para a primaira posicao do intervalo
+        //last, ponteiro para a ultima posica mais um.
+        //size, tamanho em bytes do tipo de dados do intervalo
+        //return, true se nenhum dos elementoe retornar verdadeiro para p
+    bool none_of ( const void * first , const void * last , size_t size , Predicate p )
+    {
+        byte *pf = (byte *)first;
+
+        while(pf != last)
+        {
+            if(!p(pf))
+            {
+                pf += size;
+            }else
+            {
+                return false;
+            }
+            
+        }
+
+        return true;
+    }
 }
 

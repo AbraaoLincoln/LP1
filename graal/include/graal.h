@@ -23,7 +23,11 @@ namespace graal{
 
     const void *find ( const void * first , const void * last , size_t size , const void * value , Equal eq );
 
+    bool all_of ( const void * first , const void * last , size_t size , Predicate p );
+
+    bool any_of ( const void * first , const void * last , size_t size , Predicate p );
     
+    bool none_of ( const void * first , const void * last , size_t size , Predicate p );
 
 
 }
