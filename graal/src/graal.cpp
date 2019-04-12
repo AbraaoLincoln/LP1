@@ -81,7 +81,7 @@ namespace graal{
             p_df += size;
         }
 
-        return pf;
+        return p_df;
     }
 
     //Funcao clone, cria um clone do intervalo passado
@@ -222,6 +222,90 @@ namespace graal{
         }
 
         return true;
+    }
+
+    //Funcao equal
+        //first, ponteiro para o prumeiro elemento do primero intervalo
+        //last, ponteiro para o ultimo elemento mais um do primeiro intervalo
+        //first2, ponteiro para o primeiro elemento do segundo intervalo
+        //return, true se os intervalo sao iguais.
+    bool equal(const void *first, const void *last, const void *first2, size_t size, Equal eq)
+    {
+        byte *pf = (byte *)first;
+        byte *pf2 = (byte *)first2;
+
+        while(pf != last)
+        {
+            if(!eq(pf, pf2))
+            {
+                return false;
+            }
+            pf += size;
+            pf2 += size;
+        }
+
+        return true;
+    }
+
+    //Funcao equal
+        //first, ponteiro para o prumeiro elemento do primero intervalo
+        //last, ponteiro para o ultimo elemento mais um do primeiro intervalo
+        //first2, ponteiro para o primeiro elemento do segundo intervalo
+        //last2, ponteiro para o ultimo elemento mais um do segundo intervalo
+        //return, true se os intervalo sao iguais, false caso contrario.
+    bool equal(const void *first, const void *last, const void *first2, const void *last2, size_t size, Equal eq)
+    {
+        byte *pf = (byte *)first;
+        byte *pf2 = (byte *)first2;
+
+        while(pf != last)
+        {
+            if(!eq(pf, pf2))
+            {
+                return false;
+            }
+            pf += size;
+            pf2 += size;
+        }
+
+        return true;
+    }
+
+    //Funcao unique
+        //first, ponteiro para o primeiro elemento do intervalo
+        //last, ponteiro para o ultimo elemento mais do intervalo
+        //size, tamnho em bytes dos dados do intervalo
+        //eq, funcao de comparacao
+        //return, ponterio para o ultimo elemento mais do intervalo com elementos unicos
+    void* unique( void *first , void *last , size_t size , Equal eq )
+    {
+        byte *pf = (byte *)first;
+        byte *pl = (byte *)last;
+        byte *aux, *pff{pf};
+        unsigned qtd{(pl-pf)-size};
+        pl = pff + qtd;
+
+        for(auto i{pf}; i != pl;)
+        {
+            for(auto j{i + size}; j < pl;)
+            {
+                if(eq(i, j))
+                {   
+                    aux = j;
+                    while(aux != pl)
+                    {
+                        swap(aux, aux+size, size);
+                        aux += size;
+                    }
+                    qtd -= size;
+                    pl = pff + qtd;
+                }
+                j += size;
+            }
+            i += size;
+        }
+
+        return pl;
     }
 }
 

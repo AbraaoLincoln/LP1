@@ -4,19 +4,6 @@
 #include <assert.h>
 #include "../include/graal.h"
 
-void print_array(void *first, void *last, size_t sz)
-{
-    byte *pf = (byte *)first;
-    size_t n{sz-1};
-    
-    while(pf != last)
-    {
-        std::cout << *pf << " ";
-        pf += sz;
-    }
-    std::cout << "\n";
-}
-
 bool cmp_int(void *a, void *b)
 {
     auto *pa = (int *)a;
@@ -184,6 +171,7 @@ int main(void)
         }
         std::cout << "\n";
         auto it = graal::copy(std::begin(A_int), std::end(A_int), std::begin(A_copy_int), sizeof(int));
+        assert(it==std::end(A_copy_int));
         std::cout << "Depois: ";
         for(auto c : A_copy_int)
         {
@@ -312,5 +300,65 @@ int main(void)
         //teste para char
         auto none3 = graal::none_of(std::begin(A_char), std::end(A_char), sizeof(char), p_char);
         assert(none3==false);
+    //teste equal
+        //teste equal para int
+        //para true
+        int A1_equal[]{1,2,3,4}, A2_equal[]{1,2,3,4};
+        auto rst_equal = graal::equal(std::begin(A1_equal), std::end(A1_equal), std::begin(A2_equal), sizeof(int), eq_int);
+        assert(rst_equal==true);
+        rst_equal = graal::equal(std::begin(A1_equal), std::end(A1_equal), std::begin(A2_equal), std::end(A2_equal),sizeof(int), eq_int);
+        assert(rst_equal==true);
+        //para false
+        A1_equal[2] = 5;
+        rst_equal = graal::equal(std::begin(A1_equal), std::end(A1_equal), std::begin(A2_equal), sizeof(int), eq_int);
+        assert(rst_equal==false);
+        rst_equal = graal::equal(std::begin(A1_equal), std::end(A1_equal), std::begin(A2_equal), std::end(A2_equal),sizeof(int), eq_int);
+        assert(rst_equal==false);
+        //teste para float
+        //teste para true
+        float A3_equal[]{1.7,2.5,3.4,4.3}, A4_equal[]{1.7,2.5,3.4,4.3};
+        rst_equal = graal::equal(std::begin(A3_equal), std::end(A3_equal), std::begin(A4_equal), sizeof(float), eq_float);
+        assert(rst_equal==true);
+        rst_equal = graal::equal(std::begin(A3_equal), std::end(A3_equal), std::begin(A4_equal), std::end(A4_equal),sizeof(float), eq_float);
+        assert(rst_equal==true);
+        //teste para false
+        A3_equal[3] = 2.4142;
+        rst_equal = graal::equal(std::begin(A3_equal), std::end(A3_equal), std::begin(A4_equal), sizeof(float), eq_float);
+        assert(rst_equal==false);
+        rst_equal = graal::equal(std::begin(A3_equal), std::end(A3_equal), std::begin(A4_equal), std::end(A4_equal),sizeof(float), eq_float);
+        assert(rst_equal==false);
+        //teste para char
+        //teste para true
+        char A5_equal[]{'a','b','c','d'}, A6_equal[]{'a','b','c','d'};
+        rst_equal = graal::equal(std::begin(A5_equal), std::end(A5_equal), std::begin(A6_equal), sizeof(char), eq_char);
+        assert(rst_equal==true);
+        rst_equal = graal::equal(std::begin(A5_equal), std::end(A5_equal), std::begin(A6_equal), std::end(A6_equal),sizeof(char), eq_char);
+        assert(rst_equal==true);
+        //teste para false
+        A5_equal[1] = 'z';
+        rst_equal = graal::equal(std::begin(A5_equal), std::end(A5_equal), std::begin(A6_equal), sizeof(char), eq_char);
+        assert(rst_equal==false);
+        rst_equal = graal::equal(std::begin(A5_equal), std::end(A5_equal), std::begin(A6_equal), std::end(A6_equal),sizeof(char), eq_char);
+        assert(rst_equal==false);
+    //teste para unique
+        //teste para int
+        int A_unique[] = {1, 2, 1, 2, 3, 3, 1, 2, 4, 5, 3, 4, 5};
+        int A_unique_exp[]{1,2,3,4,5};
+        auto rst_unique = (int*) graal::unique(std::begin(A_unique), std::end(A_unique), sizeof(int), eq_int);
+        auto a_{std::begin(A_unique_exp)};
+        /*
+        for(auto c : A_unique)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl; 
+        */
+        for(auto i{std::begin(A_unique)}; i != rst_unique; i++)
+        {
+            assert(*i == *a_);
+            a_++;
+        }
+        //teste para float
+        //teste para char
     return 0;
 }

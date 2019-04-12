@@ -29,6 +29,12 @@ namespace graal{
     
     bool none_of ( const void * first , const void * last , size_t size , Predicate p );
 
+    bool equal(const void *first, const void *last, const void *first2, size_t size, Equal eq);
+
+    bool equal(const void *first, const void *last, const void *first2, const void *last2, size_t size, Equal eq);
+
+    void* unique( void *first , void *last , size_t size , Equal eq );
+
 
 }
 
