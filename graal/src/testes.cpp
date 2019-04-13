@@ -17,16 +17,24 @@ bool cmp_float(void *a, void *b)
     auto *pb = (float *)b;
     return *pa < *pb;
 }
+
+bool cmp_char(void *a, void *b)
+{
+    auto *pa = (char *)a;
+    auto *pb = (char *)b;
+    return *pa < *pb;
+}
+
 bool p_int(void *a)
 {
     int *pa = (int *)a;
-    return *pa < 6;
+    return *pa < 7;
 }
 
 bool p_float(void *a)
 {
     float *pa = (float *)a;
-    return *pa < 100;
+    return *pa < 7;
 }
 
 bool p_char(void *a)
@@ -359,6 +367,80 @@ int main(void)
             a_++;
         }
         //teste para float
+        float A_uniquef[] = {1.3, 2.7, 1.3, 2.7, 3.4, 3.4, 1.3, 2.7, 4.2, 5.8, 3.4, 4.2, 5.8};
+        float A_unique_expf[]{1.3,2.7,3.4,4.2,5.8};
+        auto rst_uniquef = (float*) graal::unique(std::begin(A_uniquef), std::end(A_uniquef), sizeof(float), eq_float);
+        auto a_f{std::begin(A_unique_expf)};
+        for(auto i{std::begin(A_uniquef)}; i != rst_uniquef; i++)
+        {
+            assert(*i == *a_f);
+            a_f++;
+        }
         //teste para char
+        char A_uniquec[] = {'a', 'b', 'a', 'b', 'c', 'c', 'a', 'b', 'd', 'e', 'c', 'd', 'e'};
+        char A_unique_expc[]{'a','b','c','d','e'};
+        auto rst_uniquec = (char*) graal::unique(std::begin(A_uniquec), std::end(A_uniquec), sizeof(char), eq_char);
+        auto a_c{std::begin(A_unique_expc)};
+        for(auto i{std::begin(A_uniquec)}; i != rst_uniquec; i++)
+        {
+            assert(*i == *a_c);
+            a_c++;
+        }
+    //teste paratition
+    std::cout << "Teste pattition" << std::endl;
+        //teste para int
+        int A1_partition[] = {-5, 7, 10, 7, 8, 9, 1, 7, -2, 3};
+        //int A1_partition_exp[]{-5, -2, };
+        auto rst_partititon = (int*) graal::partition(std::begin(A1_partition), std::end(A1_partition), sizeof(int), p_int);
+        for(auto c : A1_partition)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+        //teste para float
+        float A2_partition[] = {-5.1, 7, 10.7, 7, 8.3, 9.6, 1.1, 7, -2.3, 3.5};
+        //int A1_partition_exp[]{-5, -2, };
+        auto rst_partititonf = (float*) graal::partition(std::begin(A2_partition), std::end(A2_partition), sizeof(float), p_float);
+        for(auto c : A2_partition)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+        assert(rst_partititonf==(std::begin(A2_partition)+4));
+        //teste para char
+        char A3_partition[] = {'e', 'f', 'm', 'f', 'o', 'g', 'a', 'f', 'd', 'c'};
+        //int A1_partition_exp[]{-5, -2, };
+        auto rst_partititonc = (char*) graal::partition(std::begin(A3_partition), std::end(A3_partition), sizeof(char), p_char);
+        for(auto c : A3_partition)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+        assert(rst_partititonc==(std::begin(A3_partition)+4));
+        std::cout << std::setw(20) << std::setfill('=') << "\n";
+    //teste qsort
+        //teste para int
+        int A1_sort[]{2,4,3,1,5};
+        graal::qsort(std::begin(A1_sort), std::end(A1_sort), sizeof(int), cmp_int);
+        for(auto c : A1_sort)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+        //teste para float
+        graal::qsort(std::begin(A2_partition), std::end(A2_partition), sizeof(float), cmp_float);
+        for(auto c : A2_partition)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+        //teste para char
+        graal::qsort(std::begin(A3_partition), std::end(A3_partition), sizeof(char), cmp_char);
+        for(auto c : A3_partition)
+        {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+        std::cout << std::setw(20) << std::setfill('=') << "\n";
     return 0;
 }

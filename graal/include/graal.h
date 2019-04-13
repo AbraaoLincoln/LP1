@@ -35,6 +35,10 @@ namespace graal{
 
     void* unique( void *first , void *last , size_t size , Equal eq );
 
+    void * partition ( void *first , void *last , size_t size , Predicate p );
+
+    void qsort(void *first, void *last, size_t size, Compare p);
+
 
 }
 

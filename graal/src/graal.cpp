@@ -307,5 +307,61 @@ namespace graal{
 
         return pl;
     }
+
+    //funcao partition
+        //first, ponterio para o primeiro elemento do intervalo
+        //last, ponteiro para o ultimo elemento mais um do intervalo
+        //size, tamanho em bytes do tipo de dado do intervalo
+        //p, funcao que se o elemento sastifaz determinada condicao. 
+    void* partition ( void *first , void *last , size_t size , Predicate p )
+    {
+        byte *pf = (byte *)first;
+        byte *aux, *fr;
+
+        while(pf != last)
+        {
+            if(!p(pf))
+            {
+                aux = pf + size;
+                while(aux != last)
+                {
+                    if(p(aux))
+                    {
+                        swap(pf, aux, size);
+                        fr = pf;
+                        break;
+                    }
+                    aux += size;
+                }
+            }
+            pf += size;
+        }
+
+        return fr + size;
+    }
+
+    //funcao qsort
+        //first, ponteiro para o primeiro elemento do do intervalo
+        //last, ponteiro para o ultimo elemento mais um do intervalo
+        //size, tamanho em bytes de cada elemento do intervalo
+        //c, funcao de comparacao
+    void qsort(void *first, void *last, size_t size, Compare c)
+    {
+        byte *pf = (byte *)first;
+
+        while(pf != last)
+        {
+            for(auto i{pf+size}; i != last; i += size)
+            {
+                if(c(i,pf))
+                {
+                    swap(pf, i, size);
+                }
+                //std::cout << (int)*pf << " , " <<(int)*i<< " , 2\n";
+            }
+            pf += size;
+            //std::cout << "1\n";
+        }
+    }
 }
 
