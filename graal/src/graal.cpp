@@ -224,7 +224,7 @@ namespace graal{
         return true;
     }
 
-    //Funcao equal
+    //Funcao equall, compra de dois intervalos sap iguais.
         //first, ponteiro para o prumeiro elemento do primero intervalo
         //last, ponteiro para o ultimo elemento mais um do primeiro intervalo
         //first2, ponteiro para o primeiro elemento do segundo intervalo
@@ -247,7 +247,7 @@ namespace graal{
         return true;
     }
 
-    //Funcao equal
+    //Funcao equal, compra de dois intervalos sap iguais.
         //first, ponteiro para o prumeiro elemento do primero intervalo
         //last, ponteiro para o ultimo elemento mais um do primeiro intervalo
         //first2, ponteiro para o primeiro elemento do segundo intervalo
@@ -271,7 +271,7 @@ namespace graal{
         return true;
     }
 
-    //Funcao unique
+    //Funcao unique, ordena o intervalo de forma com que os primeiro elementos nao se repitam.
         //first, ponteiro para o primeiro elemento do intervalo
         //last, ponteiro para o ultimo elemento mais do intervalo
         //size, tamnho em bytes dos dados do intervalo
@@ -308,7 +308,7 @@ namespace graal{
         return pl;
     }
 
-    //funcao partition
+    //funcao partition, ordenar o intervalo com os elemetos que sastifacao determinada condicao nas primeiras posicoes.
         //first, ponterio para o primeiro elemento do intervalo
         //last, ponteiro para o ultimo elemento mais um do intervalo
         //size, tamanho em bytes do tipo de dado do intervalo
@@ -340,7 +340,7 @@ namespace graal{
         return fr + size;
     }
 
-    //funcao qsort
+    //funcao qsort, ordena o intervalo de forma decrescente
         //first, ponteiro para o primeiro elemento do do intervalo
         //last, ponteiro para o ultimo elemento mais um do intervalo
         //size, tamanho em bytes de cada elemento do intervalo
@@ -357,10 +357,8 @@ namespace graal{
                 {
                     swap(pf, i, size);
                 }
-                //std::cout << (int)*pf << " , " <<(int)*i<< " , 2\n";
             }
             pf += size;
-            //std::cout << "1\n";
         }
     }
 }
