@@ -3,9 +3,9 @@
 
 #include <cstring>
 using byte = unsigned char;
-using Compare = bool (*)(void *a, void *b);
-using Predicate = bool (*)(void *a);
-using Equal = bool (*)(const void *a, void *b);
+using Compare = bool (*)(const void *a, const void *b);
+using Predicate = bool (*)(const void *a);
+using Equal = bool (*)(const void *a, const void *b);
 
 namespace graal{
 

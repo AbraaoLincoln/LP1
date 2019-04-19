@@ -316,7 +316,8 @@ namespace graal{
     void* partition ( void *first , void *last , size_t size , Predicate p )
     {
         byte *pf = (byte *)first;
-        byte *aux, *fr;
+        byte *pf1 = (byte *)first;
+        byte *aux, *fr{pf};
 
         while(pf != last)
         {
@@ -329,6 +330,7 @@ namespace graal{
                     {
                         swap(pf, aux, size);
                         fr = pf;
+                        fr + size;
                         break;
                     }
                     aux += size;
@@ -337,7 +339,8 @@ namespace graal{
             pf += size;
         }
 
-        return fr + size;
+        return fr;
+        
     }
 
     //funcao qsort, ordena o intervalo de forma decrescente
