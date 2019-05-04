@@ -14,6 +14,7 @@ void Canvas::pixel(const Point2& p, const Color& c)
             m_pixels[index] = c.channels[0];
             m_pixels[index+1] = c.channels[1];
             m_pixels[index+2] = c.channels[2];
+            m_pixels[index+3] = 255;
             index += 4;
         }
         index += ((m_width*image_depth)-(m_block_size*image_depth));
