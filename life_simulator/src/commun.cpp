@@ -7,7 +7,7 @@
  * @param argc, ponteiro para o argc do main, quantidade de parametros de configuração passado
  * @param argv[], ponteiro para o argv do main
  */
-void Commun::load_confg(int & argc, char *argv[])
+void Commun::load_glob_config(int & argc, char *argv[])
 {
     for(auto i{1}; i < argc;i++)
 	{
@@ -25,11 +25,14 @@ void Commun::load_confg(int & argc, char *argv[])
 
 /**
  * load_confg_grid
- * carrega as cofigurações do do grid
+ * carrega as cofigurações do grid
  */
-void Commun::load_confg_grid()
+/*
+void Commun::load_config_grid()
 {
     std::ifstream input;
     input.open(cfg["arquivo_configuracao"]);
     input >> cfg_grid.rows >> cfg_grid.columns >> cfg_grid.symbol_life;
+	input.close();
 }
+*/

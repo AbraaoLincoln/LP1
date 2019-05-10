@@ -2,20 +2,23 @@
 #define LIFE_SIMULATOR_H
 
 #include <map>
+#include <vector>
+#include <unordered_set>
 #include "../include/life.h"
-
-struct Log{
-
-};
+#include "../include/commun.h"
 
 class Life_simulator
 {
     private:
-        Life m_life;
-        Log m_log_gen;
+        //Life *m_life;
+        std::vector<std::unordered_set<int>> m_log_gen;
+        Commun glob_config;
+        int gen_stable;
     public:
-        Life_simulator();
-        void start();
+        Life *m_life;
+        Life_simulator(Commun & args);
+        ~Life_simulator();
+        bool game_over();
 };
 
 #endif

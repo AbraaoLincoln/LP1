@@ -13,12 +13,13 @@ struct Confg_grid
 class Commun
 {
     private:
-        std::map<std::string, std::string> cfg;
+        //std::map<std::string, std::string> cfg;
         //Confg_grid cfg_grid;
     public:
-        Confg_grid cfg_grid;
-        void load_confg(int & argc, char *argv[]);
-        void load_confg_grid();
+        std::map<std::string, std::string> cfg;
+        //Confg_grid cfg_grid;
+        void load_glob_config(int & argc, char *argv[]);
+        void load_config_grid();
 };
 
 #endif
