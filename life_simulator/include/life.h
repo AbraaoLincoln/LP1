@@ -14,7 +14,8 @@ class Life{
     Life(unsigned i, unsigned j);
     ~Life();
     void gen_evulution();
-    void render_gen();
+    void update_gen();
+    bool extinct() const;
     void show_grid();
 };
 

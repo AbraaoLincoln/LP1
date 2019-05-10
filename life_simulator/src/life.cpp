@@ -12,29 +12,13 @@ Life::Life(unsigned i, unsigned j) : m_i{i+2}, m_j{j+2}
 {
     grid = new bool[m_i*m_j];
 
-    grid[1*(m_j) + 2] = true;
-    grid[1*(m_j) + 3] = true;
-    grid[2*(m_j) + 2] = true;
-    //grid[1*(m_j) + 1] = true;
     //grid[1*(m_j) + 2] = true;
+    //grid[3*(m_j) + 2] = true;
+    //grid[2*(m_j) + 2] = true;
 
-    std::cout << "real:\n";
-    for(auto i{0u}; i < m_i*m_j; i++)
-    {
-        std::cout << grid[i] << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << "real:\n";
-    for(auto i{0u}; i < m_i; i++)
-    {
-        for(auto j{0u};j < m_j; j++)
-        {
-            std::cout << grid[i*(m_j) + j] << " ";
-            
-        }
-        std::cout << "\n";
-    }
+    //grid[1*(m_j) + 2] = true;
+    //grid[1*(m_j) + 3] = true;
+    //grid[2*(m_j) + 2] = true;
   
 }
 
@@ -55,47 +39,48 @@ Life::~Life()
 void Life::gen_evulution()
 {
     int count_alive{0};
+    cells_alive.clear();
 
     for(auto i{1u}; i < (m_i - 1); i++)
     {
         for(auto j{1u};j < (m_j - 1); j++)
         {
-            //1
+            //vizinho 1
             if(grid[(i-1)*(m_j) + (j-1)])
             {
                 count_alive++;
             }
-            //2
+            //vizinho 2
             if(grid[(i-1)*(m_j) + j])
             {
                 count_alive++;
             }
-            //3
+            //vizinho 3
             if(grid[(i-1)*(m_j) + (j+1)])
             {
                 count_alive++;
             }
-            //4
+            //vizinho 4
             if(grid[i*(m_j) + (j-1)])
             {
                 count_alive++;
             }
-            //5
+            //vizinho 5
             if(grid[i*(m_j) + (j+1)])
             {
                 count_alive++;
             }
-            //6
+            //vizinho 6
             if(grid[(i+1)*(m_j) + (j-1)])
             {
                 count_alive++;
             }
-            //7
+            //vizinho 7
             if(grid[(i+1)*(m_j) + j])
             {
                 count_alive++;
             }
-            //8
+            //vizinho 8
             if(grid[(i+1)*(m_j) + (j+1)])
             {
                 count_alive++;
@@ -104,16 +89,6 @@ void Life::gen_evulution()
             //Etapa de verificação se a celula morre ou vive
             //aqui é onde as regras são aplicadas
 
-            //Regra numero 1:
-            /*
-            if(grid[i*(m_j-2) + j] == true and count_alive <= 1)
-            {
-                //faz nada
-            }else if(grid[i*(m_j-2) + j] == true  )
-            {
-
-            }
-            */
             //Regra numero 3
             if(grid[i*(m_j) + j] == true )
             {
@@ -127,26 +102,22 @@ void Life::gen_evulution()
             {
                 cells_alive.insert(i*(m_j) + j);
             }
-
-            std::cout << grid[i*(m_j) + j] << " , " << count_alive << "\n";
+           
+            //std::cout << grid[i*(m_j) + j] << " , " << count_alive << "\n";
             count_alive = 0;
+
         }
     }
 
 }
 
 /**
- * render_ger
- * Atualiza o grib com a nova geração
+ * update_gen
+ * Atualiza o grid com a nova geração
  * @return nada
  */
-void Life::render_gen()
+void Life::update_gen()
 {
-    for(auto c : cells_alive)
-    {
-        std::cout << c << " ";
-    }
-    std::cout << "\n";
     for(auto i{1u}; i < (m_i - 1); i++)
     {
         for(auto j{1u};j < (m_j - 1); j++)
@@ -161,10 +132,21 @@ void Life::render_gen()
             
         }
     }
-
-    cells_alive.clear();
+}
+/**
+ * extinct
+ * verifica se a geração atual esta extinta
+ * @return true se estiver extinta, false caso contrario.
+ */
+bool Life::extinct() const
+{
+    return cells_alive.empty();
 }
 
+/**
+ * mostra no terminal o grid atual
+ * usando para fazer debug
+ */
 void Life::show_grid()
 {
     std::cout << "inside:\n";
@@ -178,7 +160,7 @@ void Life::show_grid()
         std::cout << "\n";
     }
 
-    std::cout << "real:\n";
+    std::cout << "complete:\n";
     for(auto i{0u}; i < m_i; i++)
     {
         for(auto j{0u};j < m_j; j++)
