@@ -1,4 +1,6 @@
 #include "../include/commun.h"
+#include "../include/lodepng.h"
+#include <iostream>
 #include <fstream>
 
 /**
@@ -23,16 +25,14 @@ void Commun::load_glob_config(int & argc, char *argv[])
 	}
 }
 
-/**
- * load_confg_grid
- * carrega as cofigurações do grid
- */
-/*
-void Commun::load_config_grid()
+// Example 1
+// Encode from raw pixels to disk with a single function call
+// The image argument has width * height RGBA pixels or width * height * 4 bytes
+void encode_png(const char* filename, const unsigned char * image, unsigned width, unsigned height)
 {
-    std::ifstream input;
-    input.open(cfg["arquivo_configuracao"]);
-    input >> cfg_grid.rows >> cfg_grid.columns >> cfg_grid.symbol_life;
-	input.close();
+    //Encode the image
+    unsigned error = lodepng::encode(filename, image, width, height);
+
+    //if there's an error, display it
+    if(error) std::cout << "encoder error " << error << ": "<< lodepng_error_text(error) << std::endl;
 }
-*/

@@ -33,13 +33,32 @@ bool Life_simulator::game_over()
 {
     if(m_life->extinct())
     {
-        std::cout << "A extinção chegou!\n";
+        if(m_life->write[0])
+        {
+            std::ofstream output;
+            output.open(glob_config.cfg["--outfile"], std::ofstream::app);
+            output << "A extinção chegou!\n";
+            output.close();
+        }else if(not m_life->write[1])
+        {
+            std::cout << "A extinção chegou!\n";
+        }
+
         return true;
     }else
     {
         if(m_life->stable(m_log_gen, gen_stable))
         {
-            std::cout << "Ficou estavel, a geração atual é a mesma que a " << gen_stable << "º \n";
+            if(m_life->write[1])
+            {
+                std::ofstream output;
+                output.open(glob_config.cfg["--outfile"], std::ofstream::app);
+                output << "Ficou estavel, a geração atual é a mesma que a " << gen_stable << "º \n";
+                output.close();
+            }else if(not m_life->write[1])
+            {
+                std::cout << "Ficou estavel, a geração atual é a mesma que a " << gen_stable << "º \n";
+            }
             return true;
         }
     }
