@@ -13,7 +13,7 @@ class Life_simulator
         //Life *m_life;
         std::vector<std::unordered_set<int>> m_log_gen;
         Commun glob_config;
-        int gen_stable;
+        int gen_equal;
     public:
         Life *m_life;
         Life_simulator(Commun & args);

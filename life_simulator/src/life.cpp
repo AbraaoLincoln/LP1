@@ -31,7 +31,6 @@ Life::Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
     for(auto i{1u}; i < (m_i - 1); i++) //inicializa o grid com a primeira geração
     {
         getline(l_glob_config, line);
-        //std::cout << line << "\n";
         for(auto j{1u}; j < (m_j - 1); j++)
         {
             if(j <= line.size())
@@ -89,7 +88,6 @@ Life::~Life()
 /**
  * gen_evulition
  * Aplica as regras do jogo da vida de Conway e gera um nova geração.
- * @return nao sei ainda.
  */
 void Life::gen_evulution()
 {
@@ -158,7 +156,6 @@ void Life::gen_evulution()
                 cells_alive.insert(i*(m_j) + j);
             }
            
-            //std::cout << grid[i*(m_j) + j] << " , " << count_alive << "\n";
             count_alive = 0;
 
         }
@@ -169,7 +166,6 @@ void Life::gen_evulution()
 /**
  * update_gen
  * Atualiza o grid com a nova geração
- * @return nada
  */
 void Life::update_gen()
 {
@@ -188,6 +184,7 @@ void Life::update_gen()
         }
     }
 }
+
 /**
  * extinct
  * verifica se a geração atual esta extinta
@@ -201,10 +198,11 @@ bool Life::extinct() const
 /**
  * stable
  * Esse metodo verifica se a configuração atual ja se repetiu, se sim encerra o programa senao atualiza o log com a geracao atual.
- * @param vector de unordered set que contem as geracoes passadas
+ * @param log_gen vector de unordered set que contem as geracoes passadas
+ * @param gen_stable usado para informa qual a geracao passada e igual a atual.
  * @return true se a geracao atual se repetiu, false caso contrario
  */
-bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, int & gen_stable)
+bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, int & gen_equal)
 {
     unsigned count{0};
     for(auto i{0u}; i < log_gen.size(); i++)
@@ -219,7 +217,7 @@ bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, int & gen_stab
 
         if(count == cells_alive.size() and log_gen[i].size() == cells_alive.size())
         {
-            gen_stable = i+1;
+            gen_equal = i+1;
             return true;
         }else
         {
@@ -232,16 +230,16 @@ bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, int & gen_stab
 }
 
 /**
- * mostra no terminal o grid atual
- * usando para fazer debug
+ * Grava em arquivo todas a gerecoes ou mostra no terminal ou gera as imagens das geracoes.
+ * usado para redenrizar cada geracao.
  */
-void Life::show_grid()
+void Life::render_gen()
 {
     if(write[0])
     {
         std::ofstream output;
         output.open(glob_config.cfg["--outfile"], std::ofstream::app);
-        output << "Geração\n";
+        output << "Geração " << ++c_gen << "\n";
         for(auto i{1u}; i < (m_i - 1); i++)
         {
             output << "[ ";
@@ -266,8 +264,8 @@ void Life::show_grid()
         short block_size;
         std::istringstream conversion(glob_config.cfg["--blocksize"]);
         conversion >> block_size;
-        Canvas imagem{(m_i-2), (m_j-2), block_size};
-        imagem.clear(colors[glob_config.cfg["--bkgcolor"]]);
+        Canvas imagem{(m_j-2), (m_i-2), block_size};
+        //imagem.clear(colors[glob_config.cfg["--bkgcolor"]]);
         
         for(auto j{1u}; j < (m_j-1);j++)
         {
@@ -276,15 +274,17 @@ void Life::show_grid()
                 if( grid[i*m_j + j])
                 {
                     imagem.pixel(Point2(j-1, i-1), colors[glob_config.cfg["--alivecolor"]]);
-                }
-                
+                }else
+                {
+                    imagem.pixel(Point2(j-1, i-1), colors[glob_config.cfg["--bkgcolor"]]);
+                }            
             }
         }
 
         encode_png(file.str().c_str(), imagem.pixels(), imagem.width(), imagem.height() );
     }else
     {
-        std::cout << "Geração\n";
+        std::cout << "Geração " << ++c_gen << "\n";
         for(auto i{1u}; i < (m_i - 1); i++)
         {
             std::cout << "[ ";

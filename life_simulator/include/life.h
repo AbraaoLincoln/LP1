@@ -19,12 +19,12 @@ class Life{
         //bool write[2];
     public:
     bool write[2];
-    Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & m_log_gen);
+    Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & log_gen);
     ~Life();
     void gen_evulution();
     void update_gen();
     bool extinct() const;
-    void show_grid();
+    void render_gen();
     bool stable(std::vector<std::unordered_set<int>> & m_log_gen, int & gen_stable);
     friend void encode_png(const char* filename, const unsigned char * image, unsigned width, unsigned height);
 };

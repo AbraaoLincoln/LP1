@@ -6,7 +6,7 @@
 
 /**
  * construct
- * inicializa o dicionario dos comandos.
+ * inicializa o dicionario dos comandos globais
  * inicia o objeto do tipo life e carrega a primeira geração
  */
 Life_simulator::Life_simulator(Commun & args)
@@ -47,17 +47,17 @@ bool Life_simulator::game_over()
         return true;
     }else
     {
-        if(m_life->stable(m_log_gen, gen_stable))
+        if(m_life->stable(m_log_gen, gen_equal))
         {
             if(m_life->write[1])
             {
                 std::ofstream output;
                 output.open(glob_config.cfg["--outfile"], std::ofstream::app);
-                output << "Ficou estavel, a geração atual é a mesma que a " << gen_stable << "º \n";
+                output << "Ficou estavel, a geração atual é a mesma que a " << gen_equal << "º \n";
                 output.close();
             }else if(not m_life->write[1])
             {
-                std::cout << "Ficou estavel, a geração atual é a mesma que a " << gen_stable << "º \n";
+                std::cout << "Ficou estavel, a geração atual é a mesma que a " << gen_equal << "º \n";
             }
             return true;
         }

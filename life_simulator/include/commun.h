@@ -22,6 +22,7 @@ class Commun
         //Confg_grid cfg_grid;
         void load_glob_config(int & argc, char *argv[]);
         void load_config_grid();
+        void print_help();
         
 };
 
