@@ -60,6 +60,19 @@ Life::Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
     }else if(glob_config.cfg.count("--imgdir") == 1)
     {
         write[1] = true;
+        colors["BLACK"]        = Color{0,0,0};
+        colors["WHITE"]        = Color{255,255,255};
+        colors["DARK_GREEN"]   = Color{0,100,0};
+        colors["GREEN"]        = Color{0,250,0};
+        colors["RED"]          = Color{255,0,0};
+        colors["CRIMSON"]      = Color{220,20,60};
+        colors["LIGHT_BLUE"]   = Color{135,206,250};
+        colors["LIGHT_GREY"]   = Color{210,210,210};
+        colors["DEEP_SKY_BLUE"] = Color{0,191,255};
+        colors["DODGER_BLUE"]  = Color{30,144,255};
+        colors["STEEL_BLUE"]   = Color{70,130,180};
+        colors["YELLOW"]       = Color{255,255,0};
+        colors["LIGHT_YELLOW"] = Color{255,255,153};
     }
     c_gen = 0;
 }
@@ -254,19 +267,20 @@ void Life::show_grid()
         std::istringstream conversion(glob_config.cfg["--blocksize"]);
         conversion >> block_size;
         Canvas imagem{(m_i-2), (m_j-2), block_size};
-        imagem.clear(DARK_GREEN);
-
+        imagem.clear(colors[glob_config.cfg["--bkgcolor"]]);
+        
         for(auto j{1u}; j < (m_j-1);j++)
         {
             for(auto i{1u}; i < (m_i-1); i++)
             {
                 if( grid[i*m_j + j])
                 {
-                    imagem.pixel(Point2(j-1, i-1), RED);
+                    imagem.pixel(Point2(j-1, i-1), colors[glob_config.cfg["--alivecolor"]]);
                 }
                 
             }
         }
+
         encode_png(file.str().c_str(), imagem.pixels(), imagem.width(), imagem.height() );
     }else
     {

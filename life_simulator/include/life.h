@@ -3,6 +3,7 @@
 
 #include <unordered_set> 
 #include <vector>
+#include <map>
 #include "../include/commun.h"
 
 class Life{
@@ -14,6 +15,7 @@ class Life{
         std::unordered_set<int> cells_alive;
         Commun glob_config;
         short c_gen;
+        std::map<std::string, life::Color> colors;
         //bool write[2];
     public:
     bool write[2];
