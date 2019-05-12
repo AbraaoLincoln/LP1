@@ -1,5 +1,5 @@
 #include "../include/life.h"
-#include "../include/commun.h"
+#include "../include/common.h"
 #include "../include/canvas.h"
 #include "../include/lodepng.h"
 #include <unordered_set>
@@ -17,7 +17,7 @@ using namespace life;
  * @param arq_cfg objeto que possui as configurações globais, nele é onde se encontra o nome do arquivo de configuração do grid.
  * @param log_gen, log de gerecoes
  */
-Life::Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
+Life::Life(Common & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
 {
     glob_config = arq_cfg;
     std::ifstream l_glob_config;
@@ -51,7 +51,7 @@ Life::Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
         }
     }
     l_glob_config.close();
-    log_gen.push_back(cells_alive);
+    //log_gen.push_back(cells_alive);
 
     if(glob_config.cfg.count("--outfile") == 1)
     {
@@ -73,7 +73,7 @@ Life::Life(Commun & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
         colors["YELLOW"]       = Color{255,255,0};
         colors["LIGHT_YELLOW"] = Color{255,255,153};
     }
-    c_gen = 0;
+    c_gen = 1;
 }
 
 /** 
@@ -183,6 +183,7 @@ void Life::update_gen()
             
         }
     }
+    c_gen++;
 }
 
 /**
@@ -239,7 +240,7 @@ void Life::render_gen()
     {
         std::ofstream output;
         output.open(glob_config.cfg["--outfile"], std::ofstream::app);
-        output << "Geração " << ++c_gen << "\n";
+        output << "Geração " << c_gen << "\n";
         for(auto i{1u}; i < (m_i - 1); i++)
         {
             output << "[ ";
@@ -258,7 +259,6 @@ void Life::render_gen()
         output.close();
     }else if(write[1])
     {
-        c_gen++;
         std::ostringstream file;
         file << "gen" << c_gen << ".png";
         short block_size;
@@ -284,7 +284,7 @@ void Life::render_gen()
         encode_png(file.str().c_str(), imagem.pixels(), imagem.width(), imagem.height() );
     }else
     {
-        std::cout << "Geração " << ++c_gen << "\n";
+        std::cout << "Geração " << c_gen << "\n";
         for(auto i{1u}; i < (m_i - 1); i++)
         {
             std::cout << "[ ";

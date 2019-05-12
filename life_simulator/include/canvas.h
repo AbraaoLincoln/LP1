@@ -7,7 +7,7 @@ using std::vector;
 #include <iostream>
 #include <algorithm>
 
-#include "commun.h"
+#include "common.h"
 
 namespace life {
 

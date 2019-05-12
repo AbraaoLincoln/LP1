@@ -1,5 +1,5 @@
 #include "../include/canvas.h"
-#include "../include/commun.h"
+#include "../include/common.h"
 
 using namespace life;
 

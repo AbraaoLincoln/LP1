@@ -5,18 +5,18 @@
 #include <vector>
 #include <unordered_set>
 #include "../include/life.h"
-#include "../include/commun.h"
+#include "../include/common.h"
 
 class Life_simulator
 {
     private:
         //Life *m_life;
         std::vector<std::unordered_set<int>> m_log_gen;
-        Commun glob_config;
+        Common glob_config;
         int gen_equal;
     public:
         Life *m_life;
-        Life_simulator(Commun & args);
+        Life_simulator(Common & args);
         ~Life_simulator();
         bool game_over();
 };

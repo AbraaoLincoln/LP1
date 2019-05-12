@@ -1,15 +1,15 @@
 #include "../include/life_simulator.h"
 #include "../include/life.h"
-#include "../include/commun.h"
+#include "../include/common.h"
 #include <iostream>
 #include <fstream>
 
 /**
  * construct
- * inicializa o dicionario dos comandos globais
- * inicia o objeto do tipo life e carrega a primeira geração
+ * inicializa o dicionario dos comandos globais.
+ * inicia o objeto do tipo life e carrega a primeira geração.
  */
-Life_simulator::Life_simulator(Commun & args)
+Life_simulator::Life_simulator(Common & args)
 {
     glob_config = args;
     m_life = new Life(args, m_log_gen);

@@ -1,4 +1,4 @@
-#include "../include/commun.h"
+#include "../include/common.h"
 #include "../include/lodepng.h"
 #include <iostream>
 #include <fstream>
@@ -9,7 +9,7 @@
  * @param argc, ponteiro para o argc do main, quantidade de parametros de configuração passado
  * @param argv[], ponteiro para o argv do main
  */
-void Commun::load_glob_config(int & argc, char *argv[])
+void Common::load_glob_config(int & argc, char *argv[])
 {
     for(auto i{1}; i < argc;i++)
 	{
@@ -18,7 +18,7 @@ void Commun::load_glob_config(int & argc, char *argv[])
 			if(argv[i][1] == 'h' or argv[i][2] == 'h')
 			{
 				print_help();
-			}else if(i+1 < argc)
+			}else if(i+1 < argc) //evita segmentation fault
 			{
 				cfg[argv[i]] = argv[i+1];
 				i++;
@@ -36,7 +36,7 @@ void Commun::load_glob_config(int & argc, char *argv[])
  * print_help
  * exibi no terminal a ajuda.
  */
-void Commun::print_help()
+void Common::print_help()
 {
 	std::cout << "Usage: glife [<options>] <input_cfg_file>\n";
 	std::cout << "  Simulation options:\n";
