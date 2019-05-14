@@ -13,12 +13,13 @@ class Life_simulator
         //Life *m_life;
         std::vector<std::unordered_set<int>> m_log_gen;
         Common glob_config;
-        int gen_equal;
+        unsigned gen_equal, maxgen;
     public:
         Life *m_life;
         Life_simulator(Common & args);
         ~Life_simulator();
         bool game_over();
+        void show_msg(short index);
 };
 
 #endif

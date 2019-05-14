@@ -16,16 +16,15 @@ class Life{
         Common glob_config;
         short c_gen;
         std::map<std::string, life::Color> colors;
-        //bool write[2];
     public:
-        bool write[2];
+        bool saveIN[2]; //posicao 0 = true, salve em arquivo. Posicao 1 = true salve em imagem.
         Life(Common & arq_cfg, std::vector<std::unordered_set<int>> & log_gen);
         ~Life();
         void gen_evulution();
         void update_gen();
         bool extinct() const;
         void render_gen();
-        bool stable(std::vector<std::unordered_set<int>> & m_log_gen, int & gen_stable);
+        bool stable(std::vector<std::unordered_set<int>> & m_log_gen, unsigned & gen_equal);
         friend void encode_png(const char* filename, const unsigned char * image, unsigned width, unsigned height);
 };
 

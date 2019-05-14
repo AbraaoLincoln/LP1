@@ -5,6 +5,21 @@
 #include <sstream>
 
 /**
+ * construct da classe Common
+ * inicializa o dicionario de comando globais com valores default
+ */
+Common::Common()
+{
+	//cfg["--imgdir"] = "."; //diretorio onde as imagens seram salvas
+	cfg["--maxgen"] = "0"; //numero maximo de geracoes
+	//cfg["--fps"] = "null"; //numero de geracoes apresentadas por segundo
+	cfg["--blocksize"] = "5"; //tamanho do pixel de uma celula
+	cfg["--bkgcolor"] = "GREEN"; //cor das celulas mortas
+	cfg["--alivecolor"] = "RED"; //cor das celulas vivas
+	//cfg["--outfile"] = "."; //arquivo para salvar a simulacao em texto	
+}
+
+/**
  * load_confg
  * carrega a configuração da simulação no dicionario cgf
  * @param argc, ponteiro para o argc do main, quantidade de parametros de configuração passado
@@ -38,7 +53,7 @@ void Common::load_glob_config(int & argc, char *argv[])
  * converte string para inteiro
  * @param s, uma string
  */
-int stringTOint(std::string s)
+unsigned stringTOint(std::string s)
 {
 	int n;
 	std::istringstream conversion(s);

@@ -20,13 +20,14 @@ class Common
     public:
         std::map<std::string, std::string> cfg;
         //Confg_grid cfg_grid;
+        Common();
         void load_glob_config(int & argc, char *argv[]);
         void load_config_grid();
         void print_help();
         
 };
 
-int stringTOint(std::string s);
+unsigned stringTOint(std::string s);
 
 void encode_png(const char* filename, const unsigned char * image, unsigned width, unsigned height);
 

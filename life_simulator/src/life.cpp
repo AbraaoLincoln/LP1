@@ -51,14 +51,13 @@ Life::Life(Common & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
         }
     }
     l_glob_config.close();
-    //log_gen.push_back(cells_alive);
 
     if(glob_config.cfg.count("--outfile") == 1)
     {
-        write[0] = true;
+        saveIN[0] = true;
     }else if(glob_config.cfg.count("--imgdir") == 1)
     {
-        write[1] = true;
+        saveIN[1] = true;
         colors["BLACK"]        = Color{0,0,0};
         colors["WHITE"]        = Color{255,255,255};
         colors["DARK_GREEN"]   = Color{0,100,0};
@@ -169,7 +168,7 @@ void Life::gen_evulution()
  */
 void Life::update_gen()
 {
-    for(auto i{0u}; i < m_i*m_j;i++)
+   for(auto i{0u}; i < m_i*m_j;i++)
    {
        grid[i] = false;
    }
@@ -178,7 +177,8 @@ void Life::update_gen()
    {
        grid[alive] = true;
    }
-    c_gen++;
+
+   c_gen++;
 }
 
 /**
@@ -198,7 +198,7 @@ bool Life::extinct() const
  * @param gen_stable usado para informa qual a geracao passada e igual a atual.
  * @return true se a geracao atual se repetiu, false caso contrario
  */
-bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, int & gen_equal)
+bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, unsigned & gen_equal)
 {
     unsigned count{0};
     for(auto i{0u}; i < log_gen.size(); i++)
@@ -231,7 +231,7 @@ bool Life::stable(std::vector<std::unordered_set<int>> & log_gen, int & gen_equa
  */
 void Life::render_gen()
 {
-    if(write[0])
+    if(saveIN[0])
     {
         std::ofstream output;
         output.open(glob_config.cfg["--outfile"], std::ofstream::app);
@@ -252,13 +252,12 @@ void Life::render_gen()
             output << " ]\n";
         }
         output.close();
-    }else if(write[1])
+    }else if(saveIN[1])
     {
-        std::ostringstream file;
-        file << glob_config.cfg["--imgdir"] << "/" << "gen" << c_gen << ".png";
+        std::ostringstream filename;
+        filename << glob_config.cfg["--imgdir"] << "/" << "gen" << c_gen << ".png";
         auto block_size{(short)stringTOint(glob_config.cfg["--blocksize"])};
         Canvas imagem{(m_j-2), (m_i-2), block_size};
-        //imagem.clear(colors[glob_config.cfg["--bkgcolor"]]);
         
         for(auto j{1u}; j < (m_j-1);j++)
         {
@@ -274,7 +273,7 @@ void Life::render_gen()
             }
         }
 
-        encode_png(file.str().c_str(), imagem.pixels(), imagem.width(), imagem.height() );
+        encode_png(filename.str().c_str(), imagem.pixels(), imagem.width(), imagem.height() );
     }else
     {
         std::cout << "Geração " << c_gen << "\n";
