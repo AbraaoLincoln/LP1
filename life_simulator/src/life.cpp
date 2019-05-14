@@ -169,20 +169,15 @@ void Life::gen_evulution()
  */
 void Life::update_gen()
 {
-    for(auto i{1u}; i < (m_i - 1); i++)
-    {
-        for(auto j{1u};j < (m_j - 1); j++)
-        {
-            if(cells_alive.count(i*(m_j) + j) == 1)
-            {
-                grid[i*(m_j) + j] = true;
-            }else
-            {
-                grid[i*(m_j) + j] = false;
-            }
-            
-        }
-    }
+    for(auto i{0u}; i < m_i*m_j;i++)
+   {
+       grid[i] = false;
+   }
+
+   for(auto alive : cells_alive)
+   {
+       grid[alive] = true;
+   }
     c_gen++;
 }
 
@@ -260,10 +255,8 @@ void Life::render_gen()
     }else if(write[1])
     {
         std::ostringstream file;
-        file << "gen" << c_gen << ".png";
-        short block_size;
-        std::istringstream conversion(glob_config.cfg["--blocksize"]);
-        conversion >> block_size;
+        file << glob_config.cfg["--imgdir"] << "/" << "gen" << c_gen << ".png";
+        auto block_size{(short)stringTOint(glob_config.cfg["--blocksize"])};
         Canvas imagem{(m_j-2), (m_i-2), block_size};
         //imagem.clear(colors[glob_config.cfg["--bkgcolor"]]);
         

@@ -26,6 +26,8 @@ class Common
         
 };
 
+int stringTOint(std::string s);
+
 void encode_png(const char* filename, const unsigned char * image, unsigned width, unsigned height);
 
 //copy from common

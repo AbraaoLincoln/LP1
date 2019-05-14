@@ -2,6 +2,7 @@
 #include "../include/lodepng.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 /**
  * load_confg
@@ -30,6 +31,19 @@ void Common::load_glob_config(int & argc, char *argv[])
 			cfg["arquivo_configuracao"] = argv[i];
 		}
 	}
+}
+
+/**
+ * stringTOint
+ * converte string para inteiro
+ * @param s, uma string
+ */
+int stringTOint(std::string s)
+{
+	int n;
+	std::istringstream conversion(s);
+    conversion >> n;
+	return n;	
 }
 
 /**
