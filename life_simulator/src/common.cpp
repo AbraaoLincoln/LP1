@@ -16,7 +16,8 @@ Common::Common()
 	cfg["--blocksize"] = "5"; //tamanho do pixel de uma celula
 	cfg["--bkgcolor"] = "GREEN"; //cor das celulas mortas
 	cfg["--alivecolor"] = "RED"; //cor das celulas vivas
-	//cfg["--outfile"] = "."; //arquivo para salvar a simulacao em texto	
+	//cfg["--outfile"] = "."; //arquivo para salvar a simulacao em texto
+	cfg["--setrule"] = "B3/S23";	
 }
 
 /**
@@ -70,6 +71,7 @@ void Common::print_help()
 	std::cout << "Usage: glife [<options>] <input_cfg_file>\n";
 	std::cout << "  Simulation options:\n";
 	std::cout << "    --help" << "               Print this help text.\n";
+	std::cout << "    --setrule <B3/S23>" << "   Sets the rule of the simulation.\n";
 	std::cout << "    --imgdir <path>" << "      Specify directory where output images are written to.\n";
 	std::cout << "    --maxgen <num>" << "       Maximum number of generations to simulate.\n";
 	std::cout << "    --fps <num>" << "          Number of generations presented per second.\n";

@@ -12,9 +12,9 @@ int main(int argc, char *argv[])
 
     while(not slife.game_over())
     {
-        slife.m_life->render_gen();
-        slife.m_life->gen_evulution();
-        slife.m_life->update_gen();
+        slife.render_gen();
+        slife.gen_evolution();
+        slife.update_gen();
     }
 
     return 0;

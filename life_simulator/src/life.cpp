@@ -8,10 +8,12 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <chrono>
+#include <thread>
 
 using namespace life;
 
-/** \class Life
+/**
  * Construtor
  * O construtor aloca dinamicamente a memoria, para um grib de tamanho i por j passado pelo o usuario.
  * @param arq_cfg objeto que possui as configurações globais, nele é onde se encontra o nome do arquivo de configuração do grid.
@@ -20,17 +22,17 @@ using namespace life;
 Life::Life(Common & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
 {
     glob_config = arq_cfg;
-    std::ifstream l_glob_config;
+    std::ifstream grid_config;
     std::string line;
-    l_glob_config.open(arq_cfg.cfg["arquivo_configuracao"]);
-    l_glob_config >> m_i >> m_j >> symbol_life;
+    grid_config.open(arq_cfg.cfg["arquivo_configuracao"]);
+    grid_config >> m_i >> m_j >> symbol_life;
     m_i += 2;
     m_j += 2;
     grid = new bool[m_i*m_j]; //aloca a memoria sequencialmente na memoria
-    getline(l_glob_config, line); //usado para ignorar um linha
+    getline(grid_config, line); //usado para ignorar um linha
     for(auto i{1u}; i < (m_i - 1); i++) //inicializa o grid com a primeira geração
     {
-        getline(l_glob_config, line);
+        getline(grid_config, line);
         for(auto j{1u}; j < (m_j - 1); j++)
         {
             if(j <= line.size())
@@ -50,8 +52,9 @@ Life::Life(Common & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
             
         }
     }
-    l_glob_config.close();
+    grid_config.close();
 
+    //verifica como vai ser salvo o historico de evolucao.
     if(glob_config.cfg.count("--outfile") == 1)
     {
         saveIN[0] = true;
@@ -73,6 +76,11 @@ Life::Life(Common & arq_cfg, std::vector<std::unordered_set<int>> & log_gen)
         colors["LIGHT_YELLOW"] = Color{255,255,153};
     }
     c_gen = 1;
+
+    //set as regras da simulacao.
+    rule[0] = arq_cfg.cfg["--setrule"][1] - '0';
+    rule[1] = arq_cfg.cfg["--setrule"][4] - '0';
+    rule[2] = arq_cfg.cfg["--setrule"][5] - '0';
 }
 
 /** 
@@ -85,10 +93,10 @@ Life::~Life()
 }
 
 /**
- * gen_evulition
+ * gen_evolition
  * Aplica as regras do jogo da vida de Conway e gera um nova geração.
  */
-void Life::gen_evulution()
+void Life::gen_evolution()
 {
     int count_alive{0};
     cells_alive.clear();
@@ -139,18 +147,18 @@ void Life::gen_evulution()
             }
 
             //Etapa de verificação se a celula morre ou vive
-            //aqui é onde as regras são aplicadas
+            //aqui é onde as regras sao aplicadas
 
             //Regra numero 3
             if(grid[i*(m_j) + j] == true )
             {
-                if(count_alive == 3 or count_alive == 2)
+                if(count_alive == rule[1] or count_alive == rule[2])
                 {
                     cells_alive.insert(i*(m_j) + j);
                 }
             }
             //Regra numero 4
-            if(grid[i*(m_j) + j] == false and count_alive == 3)
+            if(grid[i*(m_j) + j] == false and count_alive == rule[0])
             {
                 cells_alive.insert(i*(m_j) + j);
             }
@@ -291,6 +299,10 @@ void Life::render_gen()
                 }     
             }
             std::cout << " ]\n";
+        }
+        if(glob_config.cfg.count("--fps") == 1 and c_gen % stringTOint(glob_config.cfg["--fps"]) == 0)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
     }
 }

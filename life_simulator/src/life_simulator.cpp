@@ -67,7 +67,7 @@ bool Life_simulator::game_over()
 
 /**
  * show_msg
- * mostra a mensagem corresponde a qual das condicoes de parada foi satisfeita.
+ * mostra a mensagem corresponde a qual das condicoes de parada foi sastisfeita.
  * @param index, indice de qual mensagem deve ser exibida
  * 0 = extinto
  * 1 = estavel
@@ -95,4 +95,22 @@ void Life_simulator::show_msg(short index)
             std::cout << gen_equal << "º \n";
         }
     }
+}
+
+/**
+ * Acessa os metodos do objeto Life que é privado na classe Life_simulator
+ */
+void Life_simulator::render_gen()
+{
+    m_life->render_gen();
+}
+
+void Life_simulator::gen_evolution()
+{
+    m_life->gen_evolution();
+}
+
+void Life_simulator::update_gen()
+{
+    m_life->update_gen();
 }
