@@ -30,11 +30,13 @@ bool Snake::find_solution(Position & snake, Position & food, unsigned & rows, un
     //std::cerr << position_aux.i << " " << position_aux.j;
     while(m_grid[position_aux.i*columns+position_aux.j] != 'f')
     {
+        //std::cerr << position_aux.i << " " << position_aux.j;
         move_row(snake, food, columns, path);
         //std::cerr << "Colunas agr\n";
         move_column(snake, food, columns, path);
         //std::cerr << "X agr\n";
         position_aux = path.back();
+        //std::cerr << "main path\n";
     }
     //std::cerr << "aqui\n";
     while(not path.empty())
@@ -121,23 +123,40 @@ void Snake::move_column(Position & snake, Position & food, unsigned & columns, s
                 }
                 
             }
-            
 
         }while(exit);
 
         
-    }else
+    }else if(food.j < snake.j)
     {   //Move para a esquerda no grid
-        while(m_grid[snake.i*columns+(snake.j-1)] == ' ' and (snake.j-1) >= food.j){
-            snake.j--;
-            path.push(snake);
-        }
-
-        if(m_grid[snake.i*columns+(snake.j-1)] == 'f')
-        {
-            snake.j--;
-            path.push(snake);
-        }
+        //std::cerr << "aqui\n";
+        do
+        {   
+            while(m_grid[snake.i*columns+(snake.j-1)] == ' ' and (snake.j-1) >= food.j){
+                snake.j--;
+                path.push(snake);
+            }
+            //std::cerr << "Aqui\n";
+            if(m_grid[snake.i*columns+(snake.j-1)] == 'f')
+            {
+                snake.j--;
+                path.push(snake);
+                break;
+            }else
+            {
+                //exit = around(snake, food, columns, path);
+                if(around(snake, food, columns, path))
+                {
+                    move_column(snake, food, columns, path);
+                }else
+                {
+                    exit = false;
+                }
+                        
+            }
+                    
+        }while(exit);
+                
     }
     
 }
@@ -155,7 +174,7 @@ bool Snake::around(Position & snake, Position & food, unsigned & columns, std::q
 {
     std::queue<Position> path_around;
 
-    if((snake.j+1) != ' ')
+    if((snake.j+1) != ' ')//Direita
     {
         while(m_grid[snake.i*columns+(snake.j+1)] != ' ' and m_grid[(snake.i-1)*columns+snake.j] == ' ')
         {
@@ -167,6 +186,21 @@ bool Snake::around(Position & snake, Position & food, unsigned & columns, std::q
         {
             return false;
         }
+    }
+
+    if((snake.j-1) != ' ') //Esquerda
+    {
+        while(m_grid[snake.i*columns+(snake.j-1)] != ' ' and m_grid[(snake.i-1)*columns+snake.j] == ' ')
+        {
+            snake.i--;
+            path_around.push(snake);
+        }
+
+        if((snake.i-1) == 0 and m_grid[snake.i*columns+(snake.j-1)] != ' ')
+        {
+            return false;
+        }
+
     }
 
     while(not path_around.empty())
