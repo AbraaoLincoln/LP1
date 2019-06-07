@@ -29,17 +29,17 @@ bool Snake::find_solution(Position & snake, Position & food)
         return true;
     }
 
-    if(m_grid[lineColumnToindex(snake.i, snake.j)] == '#') //Encontrou a comida
+    if(m_grid[lineColumnToindex(snake.i, snake.j)] == '#') //Encontrou a um muro
     {
         std::cerr << "wall\n";
         return false;
     }
-    std::cerr << snake.i << " , " << snake.j<< " index: " << lineColumnToindex(snake.i, snake.j) << std::endl;
+    //std::cerr << snake.i << " , " << snake.j<< "---" << food.i << " , " << food.j << std::endl;
 
     //Verifica os vizinhos
     //Move primeiro para baixo ou para cima.
-    
-    if((food.i - (snake.i+1)) < (food.i - (snake.i-1)))
+    /*
+    if(abs(food.i - (snake.i+1)) < abs(food.i - (snake.i-1)))
     {
         std::cerr << "para baixo\n";
         Position aux{snake.i+1, snake.j};
@@ -89,7 +89,7 @@ bool Snake::find_solution(Position & snake, Position & food)
     }
 
     //Move primeiro para direita ou esquerda
-    if((food.j - (snake.j+1)) < (food.j - (snake.j-1)))
+    if(abs(food.j - (snake.j+1)) < abs(food.j - (snake.j-1)))
     {
         std::cerr << "para direita\n";
         Position aux{snake.i, snake.j+1};
@@ -137,67 +137,165 @@ bool Snake::find_solution(Position & snake, Position & food)
             }
         }
     }
-    
-   /*
-   Position aux{snake.i+1, snake.j};
-
-        if(m_grid[lineColumnToindex(snake.i+1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i+1, snake.j)) == 0)
-        {
-            std::cerr << "para baixo\n";
-            visited.insert(lineColumnToindex(aux.i, aux.j));
-            if(find_solution(aux, food))
-            {
-                path.push(lineColumnToindex(aux.i, aux.j));
-                return true;
-            }else
-            {
-                return false;
-            }
-            
-        }
-        aux.i -= 2;
-        std:: cerr << "next line:" << aux.i << std::endl;
-        std::cerr << m_grid[lineColumnToindex(aux.i, snake.j)] << " , " << visited.count(lineColumnToindex(snake.i-1, snake.j)) << std::endl;
-        if(m_grid[lineColumnToindex(snake.i-1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i-1, snake.j)) == 0)
-        {
-            std::cerr << "para cima\n";
-            visited.insert(lineColumnToindex(aux.i, aux.j));
-            if(find_solution(aux, food))
-            {
-                path.push(lineColumnToindex(aux.i, aux.j));
-                return true;
-            }else
-            {
-                return false;
-            }
-            
-        }
-        
-        Position aux1{snake.i, snake.j+1};
-
-        if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
-        {
-            std::cerr << "para a direita\n";
-            visited.insert(lineColumnToindex(aux1.i, aux1.j));
-            if(find_solution(aux1, food))
-            {
-                path.push(lineColumnToindex(aux1.i, aux1.j));
-                return true;
-            }
-        }
-        aux1.j -= 2;
-        if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
-        {
-            std::cerr << "Para a esquerda\n";
-            visited.insert(lineColumnToindex(aux1.i, aux1.j));
-            if(find_solution(aux1, food))
-            {
-                path.push(lineColumnToindex(aux1.i, aux1.j));
-                return true;
-            }
-        }
     */
-    std::cerr << "Last return\n";
+
+   /* */
+   //teste menor path
+   if((snake.i == food.i) and (wall_side(snake, food)))
+   {
+       //Move na vertical
+       //Move primeiro para direita ou esquerda
+        if(abs(food.j - (snake.j+1)) < abs(food.j - (snake.j-1)))
+        {
+            //std::cerr << "para direita\n";
+            Position aux{snake.i, snake.j+1};
+
+            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+            aux.j -= 2;
+            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+        }else
+        {
+            //std::cerr << "para a esquerda\n";
+            Position aux{snake.i, snake.j-1};
+            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+            aux.j += 2;
+            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+        }
+   }else
+   {
+        //Move primeiro para baixo ou para cima.
+        if(abs(food.i - (snake.i+1)) < abs(food.i - (snake.i-1)))
+        {
+            //std::cerr << "para baixo\n";
+            Position aux{snake.i+1, snake.j};
+
+            if(m_grid[lineColumnToindex(snake.i+1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i+1, snake.j)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+            aux.i -= 2;
+            if(m_grid[lineColumnToindex(snake.i-1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i-1, snake.j)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+        }else
+        {
+            //std::cerr << "para cima\n";
+            Position aux{snake.i-1, snake.j};
+            if(m_grid[lineColumnToindex(snake.i-1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i-1, snake.j)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+            aux.i += 2;
+            if(m_grid[lineColumnToindex(snake.i+1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i+1, snake.j)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+        }
+
+        //Move primeiro para direita ou esquerda
+        if(abs(food.j - (snake.j+1)) < abs(food.j - (snake.j-1)))
+        {
+            //std::cerr << "para direita\n";
+            Position aux{snake.i, snake.j+1};
+
+            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+            aux.j -= 2;
+            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+        }else
+        {
+            //std::cerr << "para a esquerda\n";
+            Position aux{snake.i, snake.j-1};
+            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+            aux.j += 2;
+            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
+            {
+                visited.insert(lineColumnToindex(aux.i, aux.j));
+                if(find_solution(aux, food))
+                {
+                    path.push(lineColumnToindex(aux.i, aux.j));
+                    return true;
+                }
+            }
+        }
+   }
+   
     return false;   
 }
 
@@ -205,8 +303,8 @@ bool Snake::find_solution(Position & snake, Position & food)
  * lineColumnToindex
  * Transforma um indice de matriz i e j em um unico indice para um vetor
  * Usado quando os dados estao em uma matriz mas na memoria estao em um vetor
- * @param row = linha da matriz
- * @param column = coluna da matriz
+ * @param i = linha da matriz
+ * @param j = coluna da matriz
  * @return index =  indice do elemento no vetor
  */
 unsigned Snake::lineColumnToindex(unsigned i, unsigned j)
@@ -221,4 +319,33 @@ void Snake::render_path()
         m_grid[path.top()] =  'X';
         path.pop();
     }
+}
+
+/**
+ * abs
+ * calcula o valor absluto de um numero inteiro
+ * @param value numero inteiro
+ * @return valor absoluto do numero inteiro passado
+ */
+unsigned Snake::abs(int value)
+{
+    if (value >= 0)
+    {
+        return value;
+    }else
+    {
+        return value * -1;
+    }    
+}
+
+bool Snake::wall_side(Position & snake, Position & food)
+{
+    if(snake.j < food.j)
+    {
+        return m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#';
+    }else
+    {
+        return m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#';
+    }
+    
 }
