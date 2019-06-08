@@ -202,7 +202,7 @@ bool Snake::find_solution2(Position & snake, Position & food)
     //Inicializa o vector de vector
     for(auto i{0u}; i < 4;i++)
     {
-        std::vector<unsigned> aux(10,0);
+        std::vector<unsigned> aux(1,0);
         aux.push_back(lineColumnToindex(snake.i, snake.j)); //Inicializa cada caminho com a posicao inicial da snake.
         shortest_path.push_back(aux);
     }
@@ -300,20 +300,20 @@ bool Snake::find_solution2(Position & snake, Position & food)
           count++;
       }
 
-      if((m_grid[lineColumnToindex(position_aux.i-1, position_aux.j)] != '#') and (visited.count(lineColumnToindex(position_aux.i-1, position_aux.j)) == 0))
+      if((m_grid[lineColumnToindex(position_aux.i+1, position_aux.j)] != '#') and (visited.count(lineColumnToindex(position_aux.i+1, position_aux.j)) == 0))
       {
-          visited.insert(lineColumnToindex(position_aux.i-1, position_aux.j));
+          visited.insert(lineColumnToindex(position_aux.i+1, position_aux.j));
           position_aux2 = position_aux;
-          position_aux2.i -= 1;
+          position_aux2.i += 1;
           fila.push(position_aux2);
           if(count > 0)
           {
               std::vector<unsigned> aux_vector{shortest_path[curent_path]};
-              aux_vector[aux_vector.size()-1] = lineColumnToindex(position_aux.i-1, position_aux.j);
+              aux_vector[aux_vector.size()-1] = lineColumnToindex(position_aux.i+1, position_aux.j);
               shortest_path.push_back(aux_vector);
           }else
           {
-              shortest_path[curent_path].push_back(lineColumnToindex(position_aux.i-1, position_aux.j));
+              shortest_path[curent_path].push_back(lineColumnToindex(position_aux.i+1, position_aux.j));
           }
           
           count++;
@@ -335,10 +335,32 @@ bool Snake::find_solution2(Position & snake, Position & food)
               shortest_path[curent_path].push_back(lineColumnToindex(position_aux.i, position_aux.j-1));
           }
       }
+
+      if(check_sides(position_aux)) { break; }
   }
 
+    render_path(food);
+    return true;
 
-  
+}
+
+bool Snake::check_sides(Position & snake)
+{
+    if(m_grid[lineColumnToindex(snake.i-1, snake.j)] == 'f')
+    {
+        return true;
+    }else if(m_grid[lineColumnToindex(snake.i, snake.j+1)] == 'f')
+    {
+        return true;
+    }else if(m_grid[lineColumnToindex(snake.i+1, snake.j)] == 'f')
+    {
+        return true;
+    }else if(m_grid[lineColumnToindex(snake.i, snake.j-1)] == 'f')
+    {
+        return true;
+    }
+
+    return false;
 }
 
 unsigned Snake::find_path(unsigned pst)
@@ -350,6 +372,8 @@ unsigned Snake::find_path(unsigned pst)
             return i;
         }
     }
+
+    return 0;
 }
 
 /**
@@ -365,12 +389,32 @@ unsigned Snake::lineColumnToindex(unsigned i, unsigned j)
     return i*m_columns+j;
 }
 
-void Snake::render_path()
+void Snake::render_path(Position & food)
 {
+    /*
     while(not path.empty())
     {
         m_grid[path.top()] =  'X';
         path.pop();
+    }
+    */
+
+   unsigned food_{lineColumnToindex(food.i, food.j)}, path{0};
+   for(auto i{0u}; i < shortest_path.size(); i++)
+    {
+        if(shortest_path[i][shortest_path[i].size()-1] == food_)
+        {
+            path = i;
+            std::cerr << "find shortest path\n";
+            break;
+        }
+    }
+
+    for(auto i{0u}; i < shortest_path[path].size(); i++)
+    {
+        m_grid[shortest_path[path][i]] =  'X';
+        //std::cout << shortest_path[path][i] << std::endl;
+        //if(shortest_path[path][i] == food_) { break; }
     }
 }
 
