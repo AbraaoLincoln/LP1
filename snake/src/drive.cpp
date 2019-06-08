@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
 
     Snake cobra{maneger.level, maneger.rows, maneger.columns, maneger.snake};
     cobra.find_solution(maneger.snake, maneger.food);
-    //cobra.render_path();
     maneger.render_grid();
     return 0;
 }

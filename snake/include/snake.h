@@ -16,20 +16,19 @@ class Snake
         std::unordered_set<unsigned> visited; //armazena as posicoes visitadas.
         std::vector<std::vector<unsigned> > shortest_path;
         std::queue<Position> fila;
-        //unsigned mid_rows, mid_columns;
     public:
         Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake);
+        //Metodos para achar o menor caminho
         bool find_solution(Position & snake, Position & food);
-        bool find_any_solution(Position & snake, Position & food);
         unsigned lineColumnToindex(unsigned i, unsigned j);
-        void render_path(Position & food);
         unsigned find_path(unsigned pst);
+        bool check_sides(Position & snake);
+        void render_path(Position & food);
+        Position update_position(Position & snake, short next);
+        //Metodos para encontrar um caminho
+        bool find_any_solution(Position & snake, Position & food);
         unsigned abs(int value);
         bool wall_side(Position & snake, Position & food);
-        bool check_sides(Position & snake);
-        //void move_row(Position & snake, Position & food, unsigned & columns, std::queue<Position> & path);
-        //void move_column(Position & snake, Position & food, unsigned & columns, std::queue<Position> & path);
-        //bool around(Position & snake, Position & food, unsigned & columns, std::queue<Position> & path);
 };
 
 #endif
