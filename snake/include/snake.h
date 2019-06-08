@@ -20,7 +20,7 @@ class Snake
     public:
         Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake);
         bool find_solution(Position & snake, Position & food);
-        bool find_solution2(Position & snake, Position & food);
+        bool find_any_solution(Position & snake, Position & food);
         unsigned lineColumnToindex(unsigned i, unsigned j);
         void render_path(Position & food);
         unsigned find_path(unsigned pst);
