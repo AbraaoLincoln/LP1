@@ -19,6 +19,31 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
     m_rows = rows;
     m_columns = columns;
     visited.insert(lineColumnToindex(snake.i, snake.j));
+
+    //teste body
+    /*
+    Position aux{snake.i+3, snake.j};
+    snake_body.push(aux);
+    aux.i = snake.i;
+    aux.i += 2;
+    snake_body.push(aux);
+    aux.i = snake.i;
+    aux.i += 1;
+    snake_body.push(aux);
+    */
+    //snake_body.push(snake);
+    //render_body(snake_body);
+    /*
+    Position aux{snake.i+1, snake.j+1};
+    snake_body.push(aux);
+    aux.i = snake.i;
+    aux.j = snake.j;
+    aux.i += 1;
+    snake_body.push(aux);
+    snake_body.push(snake);
+    //render_body(snake_body);
+    */
+    m_aux_body = snake_body;
 }
 
 /**
@@ -31,7 +56,7 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
 bool Snake::find_solution(Position & snake, Position & food)
 {
     Position position_aux{snake.i, snake.j}, position_aux2;
-    unsigned count{0};
+    unsigned count{0}, distance{0};
 
     //Inicializa o vector de vector
     for(auto i{0u}; i < 4;i++)
@@ -42,7 +67,7 @@ bool Snake::find_solution(Position & snake, Position & food)
     }
 
     fila.push(snake);
-    
+
     while(not fila.empty())
     {
         count = 0;
@@ -54,24 +79,31 @@ bool Snake::find_solution(Position & snake, Position & food)
         {
             position_aux2 = position_aux;
             position_aux2 = update_position(position_aux2, i);
-            if((m_grid[lineColumnToindex(position_aux2.i, position_aux2.j)] != '#') and (visited.count(lineColumnToindex(position_aux2.i, position_aux2.j)) == 0))
-            {
-                visited.insert(lineColumnToindex(position_aux2.i, position_aux2.j));
-                fila.push(position_aux2);
-                if(count > 0)
-                {
-                    std::vector<unsigned> aux_vector{shortest_path[curent_path]};
-                    aux_vector[aux_vector.size()-1] = lineColumnToindex(position_aux2.i, position_aux2.j);
-                    shortest_path.push_back(aux_vector);
-                }else
-                {
-                    shortest_path[curent_path].push_back(lineColumnToindex(position_aux2.i, position_aux2.j));
-                }
-                
-                count++;
-            }
-        }
 
+            if(distance > 0) { update_body(snake, snake_body, distance, i); }
+
+            if( not isTheBody(lineColumnToindex(position_aux2.i, position_aux2.j), m_aux_body) )
+            {
+                if((m_grid[lineColumnToindex(position_aux2.i, position_aux2.j)] != '#') and (visited.count(lineColumnToindex(position_aux2.i, position_aux2.j)) == 0))
+                {
+                    visited.insert(lineColumnToindex(position_aux2.i, position_aux2.j));
+                    fila.push(position_aux2);
+                    if(count > 0)
+                    {
+                        std::vector<unsigned> aux_vector{shortest_path[curent_path]};
+                        aux_vector[aux_vector.size()-1] = lineColumnToindex(position_aux2.i, position_aux2.j);
+                        shortest_path.push_back(aux_vector);
+                    }else
+                    {
+                        shortest_path[curent_path].push_back(lineColumnToindex(position_aux2.i, position_aux2.j));
+                    }
+                    
+                    count++;
+                }
+            }
+            
+        }
+        distance++;
         if(check_sides(position_aux)) { break; }
     }
 
@@ -136,6 +168,9 @@ unsigned Snake::lineColumnToindex(unsigned i, unsigned j)
     return i*m_columns+j;
 }
 
+/**
+ * 
+ */
 void Snake::render_path(Position & food)
 {
    unsigned food_index{lineColumnToindex(food.i, food.j)}, path{0};
@@ -189,209 +224,101 @@ Position Snake::update_position(Position & snake, short next)
             return snake;
             break;
         default:
-            std::cout << "Erro para calcular a proxima posicao\n";
+            std::cout << "Erro para calcular a proxima posicao!!!\n";
     }
 
     return snake;
 }
 
 /**
- * find_any_solution
- * encontra um caminho ate a comida.
- * @param, snake = linha do grid onde esta a snake
- * @param, food = coluna do grid onde esta a snake
- * @return, true se existir um caminho ate a comida, caso contrario false.
+ * render_body
+ * @param snake_body, fila que contem as posicoes do corpo da snake
  */
-bool Snake::find_any_solution(Position & snake, Position & food)
+void Snake::render_body(std::queue<Position> & snake_body)
 {
-    if(m_grid[lineColumnToindex(snake.i, snake.j)] == 'f') //Encontrou a comida
+    std::queue<Position> aux{snake_body};
+    Position aux_pst;
+
+    while(not aux.empty())
     {
-        path.push(lineColumnToindex(snake.i, snake.j));
-        return true;
+        aux_pst = aux.front();
+        //m_grid[lineColumnToindex(aux_pst.i, aux_pst.j)] = '#';
+        std::cerr << lineColumnToindex(aux_pst.i, aux_pst.j) << " ";
+        aux.pop();
     }
-
-    if(m_grid[lineColumnToindex(snake.i, snake.j)] == '#') //Encontrou a um muro
-    {
-        return false;
-    }
-
-   if((snake.i == food.i) and (wall_side(snake, food)))
-   {
-       //Move na vertical
-       //Move primeiro para direita ou esquerda
-        if(abs(food.j - (snake.j+1)) < abs(food.j - (snake.j-1)))
-        {
-            Position aux{snake.i, snake.j+1};
-
-            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-            aux.j -= 2;
-            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-        }else
-        {
-            Position aux{snake.i, snake.j-1};
-            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-            aux.j += 2;
-            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-        }
-   }else
-   {
-        //Move primeiro para baixo ou para cima.
-        if(abs(food.i - (snake.i+1)) < abs(food.i - (snake.i-1)))
-        {
-            Position aux{snake.i+1, snake.j};
-
-            if(m_grid[lineColumnToindex(snake.i+1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i+1, snake.j)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-            aux.i -= 2;
-            if(m_grid[lineColumnToindex(snake.i-1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i-1, snake.j)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-        }else
-        {
-            Position aux{snake.i-1, snake.j};
-            if(m_grid[lineColumnToindex(snake.i-1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i-1, snake.j)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-            aux.i += 2;
-            if(m_grid[lineColumnToindex(snake.i+1, snake.j)] != '#' and visited.count(lineColumnToindex(snake.i+1, snake.j)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-        }
-
-        //Move primeiro para direita ou esquerda
-        if(abs(food.j - (snake.j+1)) < abs(food.j - (snake.j-1)))
-        {
-            Position aux{snake.i, snake.j+1};
-
-            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-            aux.j -= 2;
-            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-        }else
-        {
-            Position aux{snake.i, snake.j-1};
-            if(m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j-1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-            aux.j += 2;
-            if(m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#' and visited.count(lineColumnToindex(snake.i, snake.j+1)) == 0)
-            {
-                visited.insert(lineColumnToindex(aux.i, aux.j));
-                if(find_solution(aux, food))
-                {
-                    path.push(lineColumnToindex(aux.i, aux.j));
-                    return true;
-                }
-            }
-        }
-   }
-   
-    return false;   
+    std::cerr << "\n";
 }
 
 /**
- * abs
- * calcula o valor absluto de um numero inteiro
- * @param value numero inteiro
- * @return valor absoluto do numero inteiro passado
+ * update_body
  */
-unsigned Snake::abs(int value)
+void Snake::update_body(Position & snake, std::queue<Position> & snake_body, unsigned distance, short side)
 {
-    if (value >= 0)
+    std::queue<Position> aux_body{snake_body};
+    Position aux_head{snake.i, snake.j};
+
+    switch(side)
     {
-        return value;
-    }else
-    {
-        return value * -1;
-    }    
+        case 0:
+            //snake.i -= 1;
+            for(auto i{0u}; i < distance; i++)
+            {
+                aux_head.i -= 1;
+                aux_body.pop();
+                aux_body.push(aux_head);
+            }
+            break;
+        case 1:
+            //snake.j += 1;
+            for(auto i{0u}; i < distance; i++)
+            {
+                aux_head.j += 1;
+                aux_body.pop();
+                aux_body.push(aux_head);
+            }
+            break;
+        case 2:
+            //snake.i += 1;
+            for(auto i{0u}; i < distance; i++)
+            {
+                aux_head.i += 1;
+                aux_body.pop();
+                aux_body.push(aux_head);
+            }
+            break;
+        case 3:
+            //snake.j -= 1;
+            for(auto i{0u}; i < distance; i++)
+            {
+                aux_head.j -= 1;
+                aux_body.pop();
+                aux_body.push(aux_head);
+            }
+            break;
+        default:
+            std::cout << "Erro ao mover o corpo!!!\n";
+    }
+
+    m_aux_body = aux_body; 
 }
 
-bool Snake::wall_side(Position & snake, Position & food)
+/**
+ * isTheBody
+ */
+bool Snake::isTheBody(unsigned pst, std::queue<Position> & snake_body)
 {
-    if(snake.j < food.j)
+    std::queue<Position> aux_body{snake_body};
+    Position aux;
+
+    while(not aux_body.empty())
     {
-        return m_grid[lineColumnToindex(snake.i, snake.j+1)] != '#';
-    }else
-    {
-        return m_grid[lineColumnToindex(snake.i, snake.j-1)] != '#';
+        aux = aux_body.front();
+        if(lineColumnToindex(aux.i, aux.j) == pst)
+        {
+            return true;
+        }
+        aux_body.pop();
     }
-    
+
+    return false;
 }

@@ -9,7 +9,7 @@
  */
 SnakeGame::SnakeGame()
 {
-
+    
 }
 
 /**
