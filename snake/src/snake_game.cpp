@@ -76,6 +76,8 @@ void SnakeGame::initialize_game(std::string file_name)
             }
         }
     }
+
+    m_snake = new Snake{level, rows, columns, snake};
     
 }
 
@@ -159,4 +161,21 @@ bool SnakeGame::update_level()
     }
 
     return false;
+}
+
+/**
+ * process_events
+ * processa os eventos do jogo
+ */
+void SnakeGame::process_events()
+{
+    render_food();
+    if(m_snake->find_solution(snake, food))
+    {
+        render_grid();
+    }else
+    {
+        std::cout << "Solução não encontrada!\n";
+    }
+    
 }

@@ -2,15 +2,18 @@
 #define SNAKEGAME_H
 #include <iostream>
 #include <fstream>
+#include "../include/snake.h"
 #include "common.h"
 
 class SnakeGame
 {
     private:
-        //char *level;
-        //unsigned rows, columns;
-        //Position snake, food;
+        Snake *m_snake;
+        char *level;
+        unsigned rows, columns;
+        Position snake, food;
         std::ifstream file_input;
+        States state;
     public:
         SnakeGame();
         ~SnakeGame();
@@ -19,9 +22,7 @@ class SnakeGame
         bool update_level();
         void render_food();
         void render_grid();
-        char *level;
-        unsigned rows, columns;
-        Position snake, food;
+        void process_events();
 };
 
 

@@ -16,6 +16,7 @@
 Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
 {
     m_grid = grid;
+    spawn = snake;
     m_rows = rows;
     m_columns = columns;
     snake_body.push(snake);
@@ -53,11 +54,13 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
  * @param rows, numoro de linhas do grid do novo level
  * @param columns, numoro de colunas do grid do novo level
  */
-void Snake::update_grid(char * newGrid, unsigned & rows, unsigned & columns)
+void Snake::update_grid(char * newGrid, Position & snake, unsigned & rows, unsigned & columns)
 {
     m_grid = newGrid;
     m_rows = rows;
     m_columns = columns;
+    spawn = snake;
+    snake_body.push(snake);
     
 }
 
@@ -122,11 +125,14 @@ bool Snake::find_solution(Position & snake, Position & food)
         }
 
         distance++;
-        if(check_sides(position_aux)) { break; }       
+        if(check_sides(position_aux)) 
+        { 
+            render_path(food);
+            return true; 
+        }       
     }
 
-    render_path(food);
-    return true;
+    return false;
 }
 
 /**
@@ -378,4 +384,41 @@ void Snake::reset()
     {
         m_aux_body.pop();
     }    
+}
+
+/**
+ * update_body
+ * atualiza o tamanho do corpo da snake em 1
+ */
+void Snake::update_body()
+{
+    std::queue<Position> aux_body;
+    Position aux_pst{snake_body.front()};
+
+    //Decidir onde vai ficar a nova parte da snake
+    if(not isTheBody(lineColumnToindex(aux_pst.i-1, aux_pst.j), snake_body))
+    {
+        aux_pst.i -= 1;
+    }else if(not isTheBody(lineColumnToindex(aux_pst.i, aux_pst.j+1), snake_body))
+    {
+        aux_pst.j += 1;
+    }else if(not isTheBody(lineColumnToindex(aux_pst.i, aux_pst.j-1), snake_body))
+    {
+        aux_pst.j -= 1;
+    }else
+    {
+         aux_pst.i += 1;
+    }
+
+    while(not snake_body.empty())
+    {
+        aux_body.push(snake_body.front());
+        snake_body.pop();
+    }
+    snake_body.push(aux_pst);
+    while(not aux_body.empty())
+    {
+        snake_body.push(aux_body.front());
+        aux_body.pop();
+    }
 }

@@ -6,4 +6,10 @@ struct Position
     unsigned i, j;
 };
 
+struct States
+{
+    short lives{5};
+    short foods{5};
+};
+
 #endif
