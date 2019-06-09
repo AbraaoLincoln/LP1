@@ -1,6 +1,7 @@
 #include "snake_game.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 
@@ -19,20 +20,41 @@ SnakeGame::SnakeGame()
 SnakeGame::~SnakeGame()
 {
     delete[] level;
+    file_input.close();
+}
+
+/**
+ * get_RowsColumns
+ * retira de uma string dois inteiro
+ * @param line, string que contem os interios separados por espacoes
+ */
+void SnakeGame::get_RowsColumns(std::string & line)
+{
+    std::string aux_str;
+
+    //Pega o numero de linhas
+    aux_str = line.substr(0, line.find(' '));
+    rows = std::stoul(aux_str);
+    //std::cerr << rows << std::endl;
+    //Pega o numero de colunas
+    aux_str = line.substr(line.find(' '));
+    columns = std::stoul(aux_str);
+    //std::cerr << columns << std::endl;
 }
 
 /**
  * Inicializa o jogo.
- * Carrega cada level
+ * Carrega o primeiro level do jogo
  * @param file_name = nome do arquivo de entrada com as configuracoes
  */
 void SnakeGame::initialize_game(std::string file_name)
 {
-    std::ifstream file_input;
     file_input.open(file_name);
     std::string line;
 
-    file_input >> rows >> columns;
+    //file_input >> rows >> columns;
+    getline(file_input, line);
+    get_RowsColumns(line);
 
     if((rows < 1 or columns < 1) or (rows > 100 or columns > 100))
     {
@@ -40,12 +62,11 @@ void SnakeGame::initialize_game(std::string file_name)
         level = new char[1];
     }else
     {
-        getline(file_input,line); // Pula uma linha.
+        //getline(file_input,line); // Pula uma linha.
         level = new char[rows*columns];
         for(auto i{0u}; i < rows; i++)
         {
             getline(file_input,line);
-            //std::cerr << line << "\n";
             for(auto j{0u}; j < columns; j++)
             {
                 level[i*columns+j] = line[j];
@@ -56,7 +77,7 @@ void SnakeGame::initialize_game(std::string file_name)
                 }
             }
         }
-
+        //getline(file_input, line);
     }
     
 }
@@ -73,15 +94,6 @@ void SnakeGame::render_food()
 
     do
     {
-        /*
-        random_position = rand() % (rows*columns);
-
-        if(level[random_position] == ' '){
-            level[random_position] =  'f';
-            exit = true;
-        }
-        */
-
        food.i = rand() % rows;
        food.j = rand() % columns;
 
@@ -108,4 +120,41 @@ void SnakeGame::render_grid()
         }
         std::cout << "\n";
     }
+}
+
+/**
+ * update_level
+ * carrega o proximo level na memoria
+ * @return true, se o proximo level foi carregado, false caso contrario
+ */
+
+bool SnakeGame::update_level()
+{
+    delete[] level;
+    std::string line;
+
+    if(not file_input.eof())
+    {
+        getline(file_input, line);
+        get_RowsColumns(line);
+
+        level = new char[rows*columns];
+        for(auto i{0u}; i < rows; i++)
+        {
+            getline(file_input,line);
+            for(auto j{0u}; j < columns; j++)
+            {
+                level[i*columns+j] = line[j];
+                if(line[j] == '*')
+                {
+                    snake.i = i;
+                    snake.j = j;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    return false;
 }

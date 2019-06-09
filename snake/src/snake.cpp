@@ -18,7 +18,7 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
     m_grid = grid;
     m_rows = rows;
     m_columns = columns;
-    visited.insert(lineColumnToindex(snake.i, snake.j));
+    //visited.insert(lineColumnToindex(snake.i, snake.j));
 
     //teste body
     /*
@@ -47,6 +47,18 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
 }
 
 /**
+ * update_grid
+ * atualiza para o proximo level
+ */
+void Snake::update_grid(char * newGrid, unsigned & rows, unsigned & columns)
+{
+    m_grid = newGrid;
+    m_rows = rows;
+    m_columns = columns;
+    
+}
+
+/**
  * find_solution
  * encontra o menor caminho ate a comida.
  * @param, snake = posicao da snake no grid
@@ -65,27 +77,30 @@ bool Snake::find_solution(Position & snake, Position & food)
         aux.push_back(lineColumnToindex(snake.i, snake.j)); //Inicializa cada caminho com a posicao inicial da snake.
         shortest_path.push_back(aux);
     }
-
+    //std::cerr << "vector\n";
     fila.push(snake);
 
     while(not fila.empty())
     {
+        //std::cerr << "begin\n";
         count = 0;
         position_aux = fila.front();
         fila.pop();
         unsigned curent_path = find_path(lineColumnToindex(position_aux.i, position_aux.j));
-        
+        //std::cerr << "end\n";
         for(auto i{0u}; i < 4;i++)
         {
             position_aux2 = position_aux;
             position_aux2 = update_position(position_aux2, i);
-
+            //std::cerr << "1.2\n";
             if(distance > 0) { update_body(snake, snake_body, distance, i); }
-
+            //std::cerr << "1.3\n";
             if( not isTheBody(lineColumnToindex(position_aux2.i, position_aux2.j), m_aux_body) )
             {
+                //std::cerr << "1.4\n";
                 if((m_grid[lineColumnToindex(position_aux2.i, position_aux2.j)] != '#') and (visited.count(lineColumnToindex(position_aux2.i, position_aux2.j)) == 0))
                 {
+                    //std::cerr << "m_grid\n";
                     visited.insert(lineColumnToindex(position_aux2.i, position_aux2.j));
                     fila.push(position_aux2);
                     if(count > 0)
@@ -99,14 +114,17 @@ bool Snake::find_solution(Position & snake, Position & food)
                     }
                     
                     count++;
+                    //std::cerr << "m_grid_end\n";
                 }
             }
             
         }
         distance++;
+        //std::cerr << "check\n";
         if(check_sides(position_aux)) { break; }
+        //std::cerr << "check_end\n";
     }
-
+    //std::cerr << "huuu\n";
     render_path(food);
     return true;
 }
@@ -321,4 +339,29 @@ bool Snake::isTheBody(unsigned pst, std::queue<Position> & snake_body)
     }
 
     return false;
+}
+
+void Snake::reset()
+{
+    visited.clear();
+    for(auto i{0u}; i < shortest_path.size(); i++)
+    {
+        shortest_path[i].clear();
+    }
+    shortest_path.clear();
+
+    while(not fila.empty())
+    {
+        fila.pop();
+    }
+
+    while(not snake_body.empty())
+    {
+        snake_body.pop();
+    }
+
+    while(not m_aux_body.empty())
+    {
+        m_aux_body.pop();
+    }    
 }
