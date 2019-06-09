@@ -136,24 +136,30 @@ bool SnakeGame::update_level()
     if(not file_input.eof())
     {
         getline(file_input, line);
-        get_RowsColumns(line);
-
-        level = new char[rows*columns];
-        for(auto i{0u}; i < rows; i++)
+        //std::cerr << (line == "" ? true:false) << std::endl;
+        
+        if(line != "")
         {
-            getline(file_input,line);
-            for(auto j{0u}; j < columns; j++)
+            get_RowsColumns(line);
+
+            level = new char[rows*columns];
+            for(auto i{0u}; i < rows; i++)
             {
-                level[i*columns+j] = line[j];
-                if(line[j] == '*')
+                getline(file_input,line);
+                for(auto j{0u}; j < columns; j++)
                 {
-                    snake.i = i;
-                    snake.j = j;
+                    level[i*columns+j] = line[j];
+                    if(line[j] == '*')
+                    {
+                        snake.i = i;
+                        snake.j = j;
+                    }
                 }
             }
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     return false;
