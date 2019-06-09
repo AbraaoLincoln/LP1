@@ -29,7 +29,6 @@ class Snake
         void update_body(Position & snake, std::queue<Position> & snake_body, unsigned distance, short side);
         bool isTheBody(unsigned pst, std::queue<Position> & snake_body);
         void render_body(std::queue<Position> & snake_body);
-
         void reset();
         void update_grid(char * newGrid, unsigned & rows, unsigned & columns);
 };

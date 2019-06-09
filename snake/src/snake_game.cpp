@@ -19,7 +19,7 @@ SnakeGame::SnakeGame()
  */
 SnakeGame::~SnakeGame()
 {
-    delete[] level;
+    //delete[] level;
     file_input.close();
 }
 
@@ -35,11 +35,9 @@ void SnakeGame::get_RowsColumns(std::string & line)
     //Pega o numero de linhas
     aux_str = line.substr(0, line.find(' '));
     rows = std::stoul(aux_str);
-    //std::cerr << rows << std::endl;
     //Pega o numero de colunas
     aux_str = line.substr(line.find(' '));
     columns = std::stoul(aux_str);
-    //std::cerr << columns << std::endl;
 }
 
 /**
@@ -77,7 +75,6 @@ void SnakeGame::initialize_game(std::string file_name)
                 }
             }
         }
-        //getline(file_input, line);
     }
     
 }
@@ -136,7 +133,6 @@ bool SnakeGame::update_level()
     if(not file_input.eof())
     {
         getline(file_input, line);
-        //std::cerr << (line == "" ? true:false) << std::endl;
         
         if(line != "")
         {

@@ -12,16 +12,15 @@ int main(int argc, char *argv[])
     cobra.find_solution(maneger.snake, maneger.food);
     maneger.render_grid();
     cobra.reset();
-    //std::cerr << "Upadate level\n";
-    if(maneger.update_level())
+
+    while(maneger.update_level())
     {
-        //std::cerr << "1\n";
         maneger.render_food();
-        //maneger.render_grid();
         cobra.update_grid(maneger.level, maneger.rows, maneger.columns);
         cobra.find_solution(maneger.snake, maneger.food);
-        //std::cerr << "2\n";
         maneger.render_grid();
+        cobra.reset();
     }
+
     return 0;
 }
