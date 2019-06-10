@@ -19,7 +19,8 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
     spawn = snake;
     m_rows = rows;
     m_columns = columns;
-    snake_body.push(snake);
+    m_snake_size = 3;
+    //snake_body.push(snake);
 
     //teste body
     /*
@@ -37,13 +38,17 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
     /*
     Position aux{snake.i+1, snake.j+1};
     snake_body.push(aux);
+    ghost_snake_body.push_back(lineColumnToindex(aux.i, aux.j));
     aux.i = snake.i;
     aux.j = snake.j;
     aux.i += 1;
+    ghost_snake_body.push_back(lineColumnToindex(aux.i, aux.j));
     snake_body.push(aux);
     snake_body.push(snake);
-    //render_body(snake_body);
+    ghost_snake_body.push_back(lineColumnToindex(snake.i, snake.j));
     */
+    //render_body(snake_body);
+    
     m_aux_body = snake_body;
 }
 
@@ -60,6 +65,7 @@ void Snake::update_grid(char * newGrid, Position & snake, unsigned & rows, unsig
     m_rows = rows;
     m_columns = columns;
     spawn = snake;
+    m_snake_size = 1;
     snake_body.push(snake);
     
 }
@@ -92,15 +98,14 @@ bool Snake::find_solution(Position & snake, Position & food)
         position_aux = fila.front();
         fila.pop();
         unsigned curent_path = find_path(lineColumnToindex(position_aux.i, position_aux.j));
+        simulate_snake(lineColumnToindex(position_aux.i, position_aux.j));
 
         for(auto i{0u}; i < 4;i++)
         {
             position_aux2 = position_aux;
             position_aux2 = update_position(position_aux2, i);
 
-            if(distance > 0) { update_body(snake, snake_body, distance, i); }
-
-            if( not isTheBody(lineColumnToindex(position_aux2.i, position_aux2.j), m_aux_body) )
+            if( not isTheBody(lineColumnToindex(position_aux2.i, position_aux2.j)) )
             {
                 if((m_grid[lineColumnToindex(position_aux2.i, position_aux2.j)] != '#') and (visited.count(lineColumnToindex(position_aux2.i, position_aux2.j)) == 0))
                 {
@@ -216,6 +221,7 @@ void Snake::render_path(Position & food)
     }
 
     m_grid[0] = '#';
+    
 }
 
 /**
@@ -287,50 +293,108 @@ void Snake::update_body(Position & snake, std::queue<Position> & snake_body, uns
 {
     std::queue<Position> aux_body{snake_body};
     Position aux_head{snake.i, snake.j};
-
+    //std::cerr << "update body1: " << aux_head.i << " , " << aux_head.j << std::endl;
     switch(side)
     {
         case 0:
             //snake.i -= 1;
             for(auto i{0u}; i < distance; i++)
             {
-                aux_head.i -= 1;
-                aux_body.pop();
-                aux_body.push(aux_head);
+                if(aux_head.i > 0)
+                {
+                    aux_head.i -= 1;
+                    aux_body.pop();
+                    aux_body.push(aux_head);
+                }else
+                {
+                    break;
+                }
+                
             }
             break;
         case 1:
             //snake.j += 1;
             for(auto i{0u}; i < distance; i++)
             {
-                aux_head.j += 1;
-                aux_body.pop();
-                aux_body.push(aux_head);
+                if(aux_head.j < (m_columns - 1))
+                {
+                    aux_head.j += 1;
+                    aux_body.pop();
+                    aux_body.push(aux_head);
+                }else
+                {
+                    break;
+                }
+                
             }
             break;
         case 2:
             //snake.i += 1;
             for(auto i{0u}; i < distance; i++)
             {
-                aux_head.i += 1;
-                aux_body.pop();
-                aux_body.push(aux_head);
+                if(aux_head.i < (m_rows - 1))
+                {
+                    aux_head.i += 1;
+                    aux_body.pop();
+                    aux_body.push(aux_head);
+                }else
+                {
+                    break;
+                }             
             }
             break;
         case 3:
             //snake.j -= 1;
             for(auto i{0u}; i < distance; i++)
             {
-                aux_head.j -= 1;
-                aux_body.pop();
-                aux_body.push(aux_head);
+                if(aux_head.j > 0)
+                {
+                    aux_head.j -= 1;
+                    aux_body.pop();
+                    aux_body.push(aux_head);
+                }else
+                {
+                    break;
+                }             
             }
             break;
         default:
             std::cout << "Erro ao mover o corpo!!!\n";
     }
-
+    //std::cerr << "update body2: " << lineColumnToindex(aux_head.i, aux_head.j) << std::endl;
+    //std::cerr << "update body2: " << aux_head.i << " , " << aux_head.j << std::endl;
+    //std::cerr << m_grid[lineColumnToindex(aux_head.i, aux_head.j)] << std::endl;
     m_aux_body = aux_body; 
+}
+
+/**
+ * 
+ */
+void Snake::simulate_snake(unsigned end_pst)
+{
+    unsigned path{0}, snake_body{0};
+
+    for(auto i{0u}; i < shortest_path.size(); i++)
+    {
+        if(shortest_path[i][shortest_path[i].size()-1] == end_pst)
+        {
+            path = i;
+            break;
+        }
+    }
+   
+    
+    if(shortest_path[path].size() >= m_snake_size)
+    {
+        snake_body = shortest_path[path].size() - m_snake_size;
+        ghost_snake_body.clear();
+
+        for(auto i{snake_body}; i < shortest_path[i].size(); i++)
+        {
+            ghost_snake_body.push_back(shortest_path[path][i]);
+        }
+
+    }//else caso a snake seja maior que o caminho
 }
 
 /**
@@ -347,11 +411,25 @@ bool Snake::isTheBody(unsigned pst, std::queue<Position> & snake_body)
     while(not aux_body.empty())
     {
         aux = aux_body.front();
+ 
         if(lineColumnToindex(aux.i, aux.j) == pst)
         {
             return true;
         }
         aux_body.pop();
+    }
+
+    return false;
+}
+
+bool Snake::isTheBody(unsigned pst)
+{
+    for(auto i{0u}; i < ghost_snake_body.size(); i++)
+    {
+        if(pst == ghost_snake_body[i])
+        {
+            return true;
+        }
     }
 
     return false;
