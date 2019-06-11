@@ -72,6 +72,8 @@ void SnakeGame::initialize_game(std::string file_name)
                 {
                     snake.i = i;
                     snake.j = j;
+                    spawn.i = i;
+                    spawn.j = j;
                 }
             }
         }
@@ -88,7 +90,6 @@ void SnakeGame::initialize_game(std::string file_name)
 void SnakeGame::render_food()
 {
     srand(time(NULL));
-    //unsigned random_position{0};
     bool exit{false};
 
     do
@@ -102,7 +103,7 @@ void SnakeGame::render_food()
         }
     } while(not exit);
     
-    render_grid();
+    //render_grid();
 }
 
 /**
@@ -111,6 +112,7 @@ void SnakeGame::render_food()
  */
 void SnakeGame::render_grid()
 {
+    level[0] = '#';
     for(auto i{0u}; i < rows; i++)
     {
         for(auto j{0u}; j < columns; j++)
@@ -151,6 +153,8 @@ bool SnakeGame::update_level()
                     {
                         snake.i = i;
                         snake.j = j;
+                        spawn.i = i;
+                        spawn.j = j;
                     }
                 }
             }
@@ -169,13 +173,43 @@ bool SnakeGame::update_level()
  */
 void SnakeGame::process_events()
 {
+    std::cout << "Lives: " << state.lives << std::endl;
+    std::cout << "Foods: " << state.foods << std::endl;
+
     render_food();
+    render_grid();
     if(m_snake->find_solution(snake, food))
     {
         render_grid();
+        m_snake->update_body(food);
+        m_snake->clear_path(food);
+        m_snake->reset(1);
+        snake.i = food.i;
+        snake.j = food.j;
+        state.foods--;
     }else
     {
+        m_snake->snake_kamikaze(snake);
+        state.lives--;
+        render_grid();
+        snake.i = spawn.i;
+        snake.j = spawn.j;
+        m_snake->reset(0);
         std::cout << "Solução não encontrada!\n";
     }
-    
+}
+
+/**
+ * gamer_over
+ * verifica se os uma das condicoes de termino de jogo aconteceu
+ * @return true, se o snake comeu o numero de todas as comidas do level ou se a quantidade de vidas chegou a zero. false caso contrario.
+ */
+bool SnakeGame::gamer_over()
+{
+    if( state.lives == 0 or state.foods == 0)
+    {
+        return true;
+    }
+
+    return false;
 }

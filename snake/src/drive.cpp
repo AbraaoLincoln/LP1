@@ -6,7 +6,10 @@ int main(int argc, char *argv[])
 {
     SnakeGame maneger;
     maneger.initialize_game(argv[1]);
-    maneger.process_events();
     
+    while(not maneger.gamer_over())
+    {
+        maneger.process_events();
+    }
     return 0;
 }

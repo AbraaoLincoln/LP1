@@ -11,7 +11,7 @@ class SnakeGame
         Snake *m_snake;
         char *level;
         unsigned rows, columns;
-        Position snake, food;
+        Position snake, food, spawn;
         std::ifstream file_input;
         States state;
     public:
@@ -23,6 +23,7 @@ class SnakeGame
         void render_food();
         void render_grid();
         void process_events();
+        bool gamer_over();
 };
 
 

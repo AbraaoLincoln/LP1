@@ -12,13 +12,13 @@ class Snake
     private:
         char *m_grid; //grid atual do jogo
         unsigned m_rows, m_columns, m_snake_size;
-        Position spawn;
+        //Position spawn, pst_snake;
         std::unordered_set<unsigned> visited; //armazena as posicoes visitadas.
         std::vector<std::vector<unsigned> > shortest_path;
         std::queue<Position> fila;
-        std::queue<Position> snake_body;
-        std::queue<Position> m_aux_body;
+        std::queue<unsigned> snake_body;
         std::vector<unsigned> ghost_snake_body;
+        std::vector<unsigned> kamikaze_path;
     public:
         Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake);
         //Metodos para achar o menor caminho
@@ -26,16 +26,17 @@ class Snake
         unsigned lineColumnToindex(unsigned i, unsigned j);
         unsigned find_path(unsigned pst);
         bool check_sides(Position & snake);
-        void render_path(Position & food);
+        void render_path(Position & food, short mode);
         Position update_position(Position & snake, short next);
-        void update_body(Position & snake, std::queue<Position> & snake_body, unsigned distance, short side);
         bool isTheBody(unsigned pst, std::queue<Position> & snake_body);
-        void render_body(std::queue<Position> & snake_body);
-        void reset();
+        void reset(short mode);
         void update_grid(char * newGrid, Position & snake, unsigned & rows, unsigned & columns);
-        void update_body();
+        void update_body(Position & food);
         void simulate_snake(unsigned end_pst);
         bool isTheBody(unsigned pst);
+        //Metods quando nao se acha um caminho.
+        void snake_kamikaze(Position & snake);
+        void clear_path(Position & food);
 };
 
 #endif
