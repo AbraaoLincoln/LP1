@@ -90,7 +90,6 @@ void SnakeGame::initialize_game(std::string file_name)
 void SnakeGame::render_food()
 {
     srand(time(NULL));
-    bool exit{false};
 
     do
     {
@@ -98,10 +97,14 @@ void SnakeGame::render_food()
        food.j = rand() % columns;
 
        if(level[food.i*columns+food.j] == ' '){
-            level[food.i*columns+food.j] =  'f';
-            exit = true;
+            if(not m_snake->checks_body(food.i*columns+food.j))
+            {
+                level[food.i*columns+food.j] =  'f';
+                break;
+            }
         }
-    } while(not exit);
+    
+    } while(true);
     
     //render_grid();
 }
@@ -182,6 +185,7 @@ void SnakeGame::process_events()
     {
         render_grid();
         m_snake->update_body(food);
+        //m_snake->render_path(food, 1);
         m_snake->clear_path(food);
         m_snake->reset(1);
         snake.i = food.i;
@@ -192,8 +196,10 @@ void SnakeGame::process_events()
         m_snake->snake_kamikaze(snake);
         state.lives--;
         render_grid();
+        level[food.i*columns+food.j] = ' ';
         snake.i = spawn.i;
         snake.j = spawn.j;
+        level[snake.i*columns+snake.j] = '*';
         m_snake->reset(0);
         std::cout << "Solução não encontrada!\n";
     }

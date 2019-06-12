@@ -11,7 +11,7 @@ class Snake
 {
     private:
         char *m_grid; //grid atual do jogo
-        unsigned m_rows, m_columns, m_snake_size;
+        unsigned m_rows, m_columns, m_snake_size, distance;
         //Position spawn, pst_snake;
         std::unordered_set<unsigned> visited; //armazena as posicoes visitadas.
         std::vector<std::vector<unsigned> > shortest_path;
@@ -34,9 +34,10 @@ class Snake
         void update_body(Position & food);
         void simulate_snake(unsigned end_pst);
         bool isTheBody(unsigned pst);
+        void clear_path(Position & food);
+        bool checks_body(unsigned pst);
         //Metods quando nao se acha um caminho.
         void snake_kamikaze(Position & snake);
-        void clear_path(Position & food);
 };
 
 #endif
