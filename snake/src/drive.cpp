@@ -4,14 +4,26 @@
 
 int main(int argc, char *argv[])
 {
-    //srand(time(NULL));
+    std::string user_input;
     SnakeGame maneger;
     maneger.initialize_game(argv[1]);
-    
-    while(not maneger.gamer_over())
+
+    std::cout << ">>> PRESS ENTER para iniciar a simulacao\n";
+    getline(std::cin, user_input);
+
+    if(user_input == "")
     {
-        maneger.process_events();
+        while(not maneger.gamer_over())
+        {
+            maneger.process_events();
+            maneger.update();
+        }
+        maneger.end_messenge();
+    }else
+    {
+        std::cout << "Programa encerrado!\n";
     }
-    maneger.end_messenge();
+    
+    
     return 0;
 }

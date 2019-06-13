@@ -21,7 +21,8 @@ SnakeGame::SnakeGame()
  */
 SnakeGame::~SnakeGame()
 {
-    //delete[] level;
+    //std::cerr << "delete des\n";
+    delete m_snakeAI;
     file_input.close();
 }
 
@@ -76,12 +77,13 @@ void SnakeGame::initialize_game(std::string file_name)
                     snake.j = j;
                     spawn.i = i;
                     spawn.j = j;
+                    //level[i*columns+j] = ' ';
                 }
             }
         }
     }
 
-    m_snake = new Snake{level, rows, columns, snake};
+    m_snakeAI = new Snake{level, rows, columns, snake};
     
 }
 
@@ -99,7 +101,7 @@ void SnakeGame::render_food()
        food.j = rand() % columns;
 
        if(level[food.i*columns+food.j] == ' '){
-            if(not m_snake->checks_body(food.i*columns+food.j))
+            if(not m_snakeAI->checks_body(food.i*columns+food.j))
             {
                 level[food.i*columns+food.j] =  'f';
                 break;
@@ -119,7 +121,7 @@ void SnakeGame::render_grid()
 {
     level[0] = '#';
     std::cout << "Lives: " << state.lives << std::endl;
-    std::cout << "Foods: " << state.foods << "/5" << std::endl;
+    std::cout << "Foods: " << state.foods << "/10" << std::endl;
     for(auto i{0u}; i < rows; i++)
     {
         for(auto j{0u}; j < columns; j++)
@@ -136,8 +138,8 @@ void SnakeGame::render_grid()
  */
 void SnakeGame::render_snakeMovement()
 {
-    auto aux_body{m_snake->get_snakeBody()};
-    std::vector<unsigned> body_movement, path{m_snake->get_shortestPath(food)};
+    auto aux_body{m_snakeAI->get_snakeBody()};
+    std::vector<unsigned> body_movement, path{m_snakeAI->get_shortestPath(food)};
     unsigned forword{0};
 
     //Coloca a snake na posicao inicial
@@ -148,24 +150,42 @@ void SnakeGame::render_snakeMovement()
         aux_body.pop();
     }
     render_grid();
-    //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     //Faz o movimento da snake
     for(auto i{2u}; i < path.size(); i++)
     {
         system("clear");
-        //std::cout << "Lives: " << state.lives << std::endl;
-        //std::cout << "Foods: " << state.foods << "/5" << std::endl;
         level[body_movement[forword]] = ' ';
         forword++;
         body_movement.push_back(path[i]);
         level[path[i]] = 'o';
         render_grid();
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
     system("clear");
-    for(auto i{0u}; i < path.size(); i++)
+    for(auto i{1u}; i < path.size(); i++)
     {
         level[path[i]] = ' ';
+    }
+}
+
+/**
+ * update
+ * verificar se a snake comeu todoas as comidas do level, se sim e a simulacao tiver mais de um level atualiza para o proximo.
+ */
+void SnakeGame::update()
+{
+    if(state.foods == 10)
+    {
+        if(update_level())
+        {
+            state.foods = 0;
+            m_snakeAI->reset(spawn, 0);
+            m_snakeAI->update_grid(level, snake, rows, columns);
+            system("clear");
+            std::cout << ">>> Next level!\n";
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
     }
 }
 
@@ -177,6 +197,7 @@ void SnakeGame::render_snakeMovement()
 
 bool SnakeGame::update_level()
 {
+    //std::cerr << "delte up\n";
     delete[] level;
     std::string line;
 
@@ -201,6 +222,7 @@ bool SnakeGame::update_level()
                         snake.j = j;
                         spawn.i = i;
                         spawn.j = j;
+                        //level[i*columns+j] = ' ';
                     }
                 }
             }
@@ -222,31 +244,33 @@ void SnakeGame::process_events()
     render_food();
     render_grid();
 
-    if(m_snake->find_solution(snake, food))
+    if(m_snakeAI->find_solution(snake, food))
     {
-        //render_grid();
         render_snakeMovement();
-        m_snake->update_body(food);
-        //m_snake->render_path(food, 1);
-        m_snake->clear_path(food);
-        m_snake->reset(spawn, 1);
-        snake.i = food.i;
-        snake.j = food.j;
+        m_snakeAI->update_body(food);
+        m_snakeAI->clear_path(food);
         state.foods++;
-        render_snakeMovement();
+        if(state.foods != 10)
+        {
+            m_snakeAI->reset(spawn, 32000); //passando o spwan so por passar.(nao e usuado no reset)
+            snake.i = food.i;
+            snake.j = food.j;
+        }
         render_grid();
     }else
     {
         //m_snake->snake_kamikaze(snake);
         state.lives--;
         render_grid();
-        level[food.i*columns+food.j] = ' ';
-        snake.i = spawn.i;
-        snake.j = spawn.j;
-        //level[snake.i*columns+snake.j] = '*';
-        m_snake->reset(spawn, 0);
+        if(state.lives != 0)
+        {
+            level[food.i*columns+food.j] = ' ';
+            snake.i = spawn.i;
+            snake.j = spawn.j;
+            m_snakeAI->reset(spawn, 1);
+        }
         std::cout << "Solução não encontrada!\n";
-        //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
 }
 
@@ -257,7 +281,7 @@ void SnakeGame::process_events()
  */
 bool SnakeGame::gamer_over()
 {
-    if( state.lives == 0 or state.foods == 5)
+    if( state.lives == 0 or state.foods == 10)
     {
         return true;
     }
@@ -271,7 +295,7 @@ bool SnakeGame::gamer_over()
  */
 void SnakeGame::end_messenge()
 {
-    if(state.foods == 5)
+    if(state.foods == 10)
     {
         std::cout << "A snake completou o level\n";
     }
@@ -280,4 +304,9 @@ void SnakeGame::end_messenge()
     {
         std::cout << "A snake perdeu!\n";
     }
+}
+
+void SnakeGame::draw_snake()
+{
+  
 }

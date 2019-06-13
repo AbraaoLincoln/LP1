@@ -16,38 +16,10 @@
 Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
 {
     m_grid = grid;
-    //spawn = snake;
     m_rows = rows;
     m_columns = columns;
     m_snake_size = 1;
     snake_body.push(lineColumnToindex(snake.i, snake.j));
-
-    //teste body
-    /*
-    Position aux{snake.i+3, snake.j};
-    snake_body.push(aux);
-    aux.i = snake.i;
-    aux.i += 2;
-    snake_body.push(aux);
-    aux.i = snake.i;
-    aux.i += 1;
-    snake_body.push(aux);
-    */
-    //snake_body.push(snake);
-    //render_body(snake_body);
-    /*
-    Position aux{snake.i+1, snake.j+1};
-    snake_body.push(aux);
-    ghost_snake_body.push_back(lineColumnToindex(aux.i, aux.j));
-    aux.i = snake.i;
-    aux.j = snake.j;
-    aux.i += 1;
-    ghost_snake_body.push_back(lineColumnToindex(aux.i, aux.j));
-    snake_body.push(aux);
-    snake_body.push(snake);
-    ghost_snake_body.push_back(lineColumnToindex(snake.i, snake.j));
-    */
-    //render_body(snake_body);
 }
 
 /**
@@ -62,7 +34,6 @@ void Snake::update_grid(char * newGrid, Position & snake, unsigned & rows, unsig
     m_grid = newGrid;
     m_rows = rows;
     m_columns = columns;
-    //spawn = snake;
     m_snake_size = 1;
     snake_body.push(lineColumnToindex(snake.i, snake.j));
     
@@ -79,6 +50,7 @@ bool Snake::find_solution(Position & snake, Position & food)
 {
     Position position_aux{snake.i, snake.j}, position_aux2;
     unsigned count{0};
+    std::vector<unsigned> aux_vector;
     distance = 0;
 
     //Inicializa o vector de vector    
@@ -103,18 +75,16 @@ bool Snake::find_solution(Position & snake, Position & food)
         {
             position_aux2 = position_aux;
             position_aux2 = update_position(position_aux2, i);
-            //std::cerr << distance << std::endl;
+            
             if( not isTheBody(lineColumnToindex(position_aux2.i, position_aux2.j)) )
             {
                 if((m_grid[lineColumnToindex(position_aux2.i, position_aux2.j)] != '#') and (visited.count(lineColumnToindex(position_aux2.i, position_aux2.j)) == 0))
                 {
-
                     visited.insert(lineColumnToindex(position_aux2.i, position_aux2.j));
                     fila.push(position_aux2);
-
                     if(count > 0)
                     {
-                        std::vector<unsigned> aux_vector{shortest_path[curent_path]};
+                        aux_vector = shortest_path[curent_path];
                         aux_vector[aux_vector.size()-1] = lineColumnToindex(position_aux2.i, position_aux2.j);
                         shortest_path.push_back(aux_vector);
                     }else
@@ -262,7 +232,7 @@ void Snake::clear_path(Position & food)
     {
         m_grid[shortest_path[path][i]] =  ' ';
     }
-    m_grid[shortest_path[path][shortest_path[path].size()-1]] =  '*';
+    //m_grid[shortest_path[path][shortest_path[path].size()-1]] =  '*';
 }
 
 /**
@@ -298,7 +268,7 @@ Position Snake::update_position(Position & snake, short next)
             return aux_pst;
             break;
         default:
-            std::cout << "Erro para calcular a proxima posicao!!!\n";
+            std::cerr << "Erro para calcular a proxima posicao!!!\n";
     }
 
     return aux_pst;
@@ -402,7 +372,7 @@ bool Snake::isTheBody(unsigned pst)
 void Snake::reset(Position & snake_spawn, short mode)
 {
     visited.clear();
-
+    
     for(auto i{0u}; i < shortest_path.size(); i++)
     {
         shortest_path[i].clear();
@@ -418,12 +388,18 @@ void Snake::reset(Position & snake_spawn, short mode)
     {
         while(not snake_body.empty())
         {
-            m_grid[snake_body.front()] = ' ';
             snake_body.pop();
         }
-        snake_body.push(lineColumnToindex(snake_spawn.i, snake_spawn.j));
         m_snake_size = 1;
            
+    }else if(mode == 1)
+    {
+         while(not snake_body.empty())
+        {
+            snake_body.pop();
+        }
+        snake_body.push(lineColumnToindex(snake_spawn.i, snake_spawn.j)); //ja e add no metodo update_grid
+        m_snake_size = 1;
     }
    
     kamikaze_path.clear();
@@ -462,10 +438,6 @@ void Snake::update_body(Position & food)
             snake_body.push(shortest_path[path][i]);
         }
     }
-    //Nova posicao da snake no grid
-    //m_grid[lineColumnToindex(food.i, food.j)] = '*';
-    //pst_snake.i = food.i;
-    //pst_snake.j = food.j;
 
 }
 /**

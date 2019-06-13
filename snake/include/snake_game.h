@@ -8,7 +8,7 @@
 class SnakeGame
 {
     private:
-        Snake *m_snake;
+        Snake *m_snakeAI;
         char *level;
         unsigned rows, columns;
         Position snake, food, spawn;
@@ -20,12 +20,15 @@ class SnakeGame
         void initialize_game(std::string file_name);
         void get_RowsColumns(std::string & line);
         bool update_level();
+        void update();
         void render_food();
         void render_grid();
         void render_snakeMovement();
         void process_events();
         bool gamer_over();
         void end_messenge();
+
+        void draw_snake();
 };
 
 
