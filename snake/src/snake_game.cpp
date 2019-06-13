@@ -183,8 +183,8 @@ void SnakeGame::update()
             m_snakeAI->reset(spawn, 0);
             m_snakeAI->update_grid(level, snake, rows, columns);
             system("clear");
-            std::cout << ">>> Next level!\n";
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            //std::cout << ">>> Next level!\n";
+            //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
     }
 }
@@ -256,7 +256,7 @@ void SnakeGame::process_events()
             snake.i = food.i;
             snake.j = food.j;
         }
-        render_grid();
+
     }else
     {
         //m_snake->snake_kamikaze(snake);
@@ -295,14 +295,19 @@ bool SnakeGame::gamer_over()
  */
 void SnakeGame::end_messenge()
 {
+    system("clear");
     if(state.foods == 10)
     {
-        std::cout << "A snake completou o level\n";
+        std::cout << "=============================\n";
+        std::cout << "| A snake completou o level |\n";
+        std::cout << "=============================\n";
     }
 
     if(state.lives == 0)
     {
-        std::cout << "A snake perdeu!\n";
+        std::cout << "=============================\n";
+        std::cout << "|      A snake perdeu!      |\n";
+        std::cout << "=============================\n";
     }
 }
 
