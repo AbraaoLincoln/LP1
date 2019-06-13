@@ -9,7 +9,7 @@ struct Position
 struct States
 {
     short lives{5};
-    short foods{5};
+    short foods{0};
 };
 
 #endif

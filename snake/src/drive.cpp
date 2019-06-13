@@ -12,5 +12,6 @@ int main(int argc, char *argv[])
     {
         maneger.process_events();
     }
+    maneger.end_messenge();
     return 0;
 }

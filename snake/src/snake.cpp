@@ -131,7 +131,7 @@ bool Snake::find_solution(Position & snake, Position & food)
         distance++;
         if(check_sides(position_aux)) 
         { 
-            render_path(food, 0);
+            //render_path(food, 1);
             return true; 
         }       
     }
@@ -394,11 +394,12 @@ bool Snake::isTheBody(unsigned pst)
 /**
  * reset
  * resetar tudo para as configuracoes iniciais.
+ * @param Snake_spawn, posicao do spawn da snake
  * @param mode, mode execucao
  * 0 = reseta tudo
  * 1 = nao reseta o corpo da snake
  */
-void Snake::reset(short mode)
+void Snake::reset(Position & snake_spawn, short mode)
 {
     visited.clear();
 
@@ -420,6 +421,7 @@ void Snake::reset(short mode)
             m_grid[snake_body.front()] = ' ';
             snake_body.pop();
         }
+        snake_body.push(lineColumnToindex(snake_spawn.i, snake_spawn.j));
         m_snake_size = 1;
            
     }
@@ -504,4 +506,35 @@ bool Snake::checks_body(unsigned pst)
     }
 
     return false;
+}
+
+/**
+ * get_snakeBody
+ * @return retorna uma reference para o corpo da snake
+ */
+
+std::queue<unsigned>& Snake::get_snakeBody()
+{
+    return snake_body;
+}
+/**
+ * get_shortestPath
+ * @param sht_path indece o menor caminho
+ * @param food, posicao da comida no grid
+ * @return referencia para o vector que contem o menor caminho.
+ */
+std::vector<unsigned>& Snake::get_shortestPath(Position & food)
+{
+    unsigned path{0};
+
+    for(auto i{0u}; i < shortest_path.size(); i++)
+    {
+        if(shortest_path[i][shortest_path[i].size()-1] == lineColumnToindex(food.i, food.j))
+        {
+            path = i;
+            break;
+        }
+    }
+
+    return shortest_path[path];
 }

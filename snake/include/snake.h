@@ -29,7 +29,7 @@ class Snake
         void render_path(Position & food, short mode);
         Position update_position(Position & snake, short next);
         bool isTheBody(unsigned pst, std::queue<Position> & snake_body);
-        void reset(short mode);
+        void reset(Position & snake_spawn, short mode);
         void update_grid(char * newGrid, Position & snake, unsigned & rows, unsigned & columns);
         void update_body(Position & food);
         void simulate_snake(unsigned end_pst);
@@ -38,6 +38,9 @@ class Snake
         bool checks_body(unsigned pst);
         //Metods quando nao se acha um caminho.
         void snake_kamikaze(Position & snake);
+        //Gets
+        std::queue<unsigned>& get_snakeBody();
+        std::vector<unsigned>& get_shortestPath(Position & food);
 };
 
 #endif

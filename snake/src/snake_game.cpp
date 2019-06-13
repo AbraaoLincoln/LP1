@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+#include <thread>
 
 /**
  * construtor da classe snake_game
@@ -116,6 +118,8 @@ void SnakeGame::render_food()
 void SnakeGame::render_grid()
 {
     level[0] = '#';
+    std::cout << "Lives: " << state.lives << std::endl;
+    std::cout << "Foods: " << state.foods << "/5" << std::endl;
     for(auto i{0u}; i < rows; i++)
     {
         for(auto j{0u}; j < columns; j++)
@@ -123,6 +127,45 @@ void SnakeGame::render_grid()
             std::cout << level[i*columns+j];
         }
         std::cout << "\n";
+    }
+}
+
+/**
+ * render_snakeMovement
+ * mostra o grid com a snake se movendo
+ */
+void SnakeGame::render_snakeMovement()
+{
+    auto aux_body{m_snake->get_snakeBody()};
+    std::vector<unsigned> body_movement, path{m_snake->get_shortestPath(food)};
+    unsigned forword{0};
+
+    //Coloca a snake na posicao inicial
+    while(not aux_body.empty())
+    {
+        body_movement.push_back(aux_body.front());
+        level[aux_body.front()] = 'o';
+        aux_body.pop();
+    }
+    render_grid();
+    //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    //Faz o movimento da snake
+    for(auto i{2u}; i < path.size(); i++)
+    {
+        system("clear");
+        //std::cout << "Lives: " << state.lives << std::endl;
+        //std::cout << "Foods: " << state.foods << "/5" << std::endl;
+        level[body_movement[forword]] = ' ';
+        forword++;
+        body_movement.push_back(path[i]);
+        level[path[i]] = 'o';
+        render_grid();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+    system("clear");
+    for(auto i{0u}; i < path.size(); i++)
+    {
+        level[path[i]] = ' ';
     }
 }
 
@@ -176,32 +219,34 @@ bool SnakeGame::update_level()
  */
 void SnakeGame::process_events()
 {
-    std::cout << "Lives: " << state.lives << std::endl;
-    std::cout << "Foods: " << state.foods << std::endl;
-
     render_food();
     render_grid();
+
     if(m_snake->find_solution(snake, food))
     {
-        render_grid();
+        //render_grid();
+        render_snakeMovement();
         m_snake->update_body(food);
         //m_snake->render_path(food, 1);
         m_snake->clear_path(food);
-        m_snake->reset(1);
+        m_snake->reset(spawn, 1);
         snake.i = food.i;
         snake.j = food.j;
-        state.foods--;
+        state.foods++;
+        render_snakeMovement();
+        render_grid();
     }else
     {
-        m_snake->snake_kamikaze(snake);
+        //m_snake->snake_kamikaze(snake);
         state.lives--;
         render_grid();
         level[food.i*columns+food.j] = ' ';
         snake.i = spawn.i;
         snake.j = spawn.j;
-        level[snake.i*columns+snake.j] = '*';
-        m_snake->reset(0);
+        //level[snake.i*columns+snake.j] = '*';
+        m_snake->reset(spawn, 0);
         std::cout << "Solução não encontrada!\n";
+        //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     }
 }
 
@@ -212,10 +257,27 @@ void SnakeGame::process_events()
  */
 bool SnakeGame::gamer_over()
 {
-    if( state.lives == 0 or state.foods == 0)
+    if( state.lives == 0 or state.foods == 5)
     {
         return true;
     }
 
     return false;
+}
+
+/**
+ * end_messenge
+ * exibi uma menssagem final no terminal
+ */
+void SnakeGame::end_messenge()
+{
+    if(state.foods == 5)
+    {
+        std::cout << "A snake completou o level\n";
+    }
+
+    if(state.lives == 0)
+    {
+        std::cout << "A snake perdeu!\n";
+    }
 }
