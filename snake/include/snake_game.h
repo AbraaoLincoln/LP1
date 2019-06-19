@@ -10,7 +10,7 @@ class SnakeGame
     private:
         Snake *m_snakeAI;
         char *level;
-        unsigned rows, columns;
+        unsigned rows, columns, foodsToEat;
         Position snake, food, spawn;
         std::ifstream file_input;
         States state;

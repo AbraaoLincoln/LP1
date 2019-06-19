@@ -437,6 +437,31 @@ void Snake::update_body(Position & food)
         {
             snake_body.push(shortest_path[path][i]);
         }
+    }else
+    {
+        
+        auto aux_body{this->snake_body};
+
+        while(not snake_body.empty())
+        {
+            snake_body.pop();
+        }
+
+        for(auto i{m_snake_size - shortest_path[path].size()}; i < shortest_path[path].size();i++)
+        {
+            aux_body.pop();
+        }
+
+        while(not aux_body.empty())
+        {
+            snake_body.push(aux_body.front());
+            aux_body.pop();
+        }
+
+        for(auto i{0u}; i < shortest_path[path].size(); i++)
+        {
+            snake_body.push(shortest_path[path][i]);
+        }
     }
 
 }

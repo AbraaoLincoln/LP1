@@ -8,8 +8,9 @@ struct Position
 
 struct States
 {
-    short lives{5};
-    short foods{0};
+    unsigned lives{5};
+    unsigned foods{0};
+    unsigned level{1};
 };
 
 #endif
