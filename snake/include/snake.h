@@ -38,6 +38,8 @@ class Snake
         bool checks_body(unsigned pst);
         //Metods quando nao se acha um caminho.
         void snake_kamikaze(Position & snake);
+        short checks_freePath(Position & snake);
+        std::vector<unsigned>& get_kamikazePath();
         //Gets
         std::queue<unsigned>& get_snakeBody();
         std::vector<unsigned>& get_shortestPath(Position & food);

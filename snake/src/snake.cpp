@@ -5,6 +5,8 @@
 #include <stack>
 #include <unordered_set>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 /**
  * construct da classe Snake
@@ -467,21 +469,89 @@ void Snake::update_body(Position & food)
 }
 /**
  * snake_kamikaze
- * a snake se mata
+ * a snake se mata, faz o caminho necessario para a snake perder
  * @param snake, posicao da snake
  */
 void Snake::snake_kamikaze(Position & snake)
 {
     auto start{snake};
 
-    while(m_grid[lineColumnToindex(start.i, start.j)] == ' ')
+    auto direction = checks_freePath(snake);
+
+    switch(direction)
     {
-        kamikaze_path.push_back(lineColumnToindex(start.i, start.j));
-        start.j++;
+        case 1:
+            while(m_grid[lineColumnToindex(start.i, start.j)] == ' ')
+            {
+                kamikaze_path.push_back(lineColumnToindex(start.i, start.j));
+                start.i--;
+            }
+            break;
+        case 2:
+            while(m_grid[lineColumnToindex(start.i, start.j)] == ' ')
+            {
+                kamikaze_path.push_back(lineColumnToindex(start.i, start.j));
+                start.j++;
+            }
+            break;
+        case 3:
+            while(m_grid[lineColumnToindex(start.i, start.j)] == ' ')
+            {
+                kamikaze_path.push_back(lineColumnToindex(start.i, start.j));
+                start.i++;
+            }
+            break;
+        case 4:
+            while(m_grid[lineColumnToindex(start.i, start.j)] == ' ')
+            {
+                kamikaze_path.push_back(lineColumnToindex(start.i, start.j));
+                start.j--;
+            }
+            break;
+        default:
+            std::cout << "Sem espacos livre ao redor da snake\n";
     }
-    kamikaze_path.push_back(lineColumnToindex(start.i, start.j));
 
 }
+
+/**
+ * checks_freePath
+ * verifica qual dos lados da snake esta livre.
+ * @param snake, posicao da snake no grid.
+ * @return
+ * 1 = tem um espaco livre acima da snake
+ * 2 = tem um espaco livre a direita da snake
+ * 3 = tem um espaco livre abaixo da snake
+ * 4 = tem um espaco livre a esquerda
+ * -1 = nao ha espacos livres ao redor da snake
+ */
+short Snake::checks_freePath(Position & snake)
+{
+    if((m_grid[lineColumnToindex(snake.i-1, snake.j)] == ' ') and (not checks_body(lineColumnToindex(snake.i-1, snake.j))))
+    {
+        return 1;
+    }else if((m_grid[lineColumnToindex(snake.i, snake.j+1)] == ' ') and (not checks_body(lineColumnToindex(snake.i, snake.j+1))))
+    {
+        return 2;
+    }else if((m_grid[lineColumnToindex(snake.i+1, snake.j)] == ' ') and (not checks_body(lineColumnToindex(snake.i+1, snake.j))))
+    {
+        return 3;
+    }else if((m_grid[lineColumnToindex(snake.i, snake.j-1)] == ' ') and (not checks_body(lineColumnToindex(snake.i, snake.j-1))))
+    {
+        return 4;
+    }
+
+    return -1;
+}
+
+/**
+ * get_snakamikaze
+ * @return, retorna o caminho que a snake vai fazer para perder.
+ */
+ std::vector<unsigned>& Snake::get_kamikazePath()
+ {
+     return kamikaze_path;
+ }
 
 /**
  * checks_body

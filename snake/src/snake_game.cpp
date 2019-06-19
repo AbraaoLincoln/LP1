@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <ctime>
 #include <chrono>
 #include <thread>
 
@@ -161,9 +160,46 @@ void SnakeGame::render_snakeMovement()
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
     }
     system("clear");
-    for(auto i{1u}; i < path.size(); i++)
+    //Limpa o caminho feito pela snake.
+    for(auto i{forword}; i < body_movement.size(); i++)
     {
-        level[path[i]] = ' ';
+        level[body_movement[i]] = ' ';
+    }
+}
+
+/**
+ * render_snakeKamikaze
+ */
+void SnakeGame::render_snakeKamikaze()
+{
+    auto aux_body{m_snakeAI->get_snakeBody()};
+    std::vector<unsigned> body_movement, path{m_snakeAI->get_kamikazePath()};
+    unsigned forword{0};
+
+    //Coloca a snake na posicao inicial
+    while(not aux_body.empty())
+    {
+        body_movement.push_back(aux_body.front());
+        level[aux_body.front()] = 'o';
+        aux_body.pop();
+    }
+    render_grid();
+    //Faz o movimento da snake
+    for(auto i{0u}; i < path.size(); i++)
+    {
+        system("clear");
+        level[body_movement[forword]] = ' ';
+        forword++;
+        body_movement.push_back(path[i]);
+        level[path[i]] = 'o';
+        render_grid();
+        std::this_thread::sleep_for(std::chrono::milliseconds(175));
+    }
+    system("clear");
+    //Limpa o caminho feito pela snake.
+    for(auto i{forword}; i < body_movement.size(); i++)
+    {
+        level[body_movement[i]] = ' ';
     }
 }
 
@@ -181,8 +217,6 @@ void SnakeGame::update()
             m_snakeAI->reset(spawn, 0);
             m_snakeAI->update_grid(level, snake, rows, columns);
             system("clear");
-            //std::cout << ">>> Next level!\n";
-            //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
     }
 }
@@ -255,7 +289,8 @@ void SnakeGame::process_events()
 
     }else
     {
-        //m_snake->snake_kamikaze(snake);
+        m_snakeAI->snake_kamikaze(snake);
+        render_snakeKamikaze();
         state.lives--;
         if(state.lives != 0)
         {
@@ -309,9 +344,4 @@ void SnakeGame::end_messenge()
         std::cout << "|      A snake perdeu!      |\n";
         std::cout << "=============================\n";
     }
-}
-
-void SnakeGame::draw_snake()
-{
-  
 }

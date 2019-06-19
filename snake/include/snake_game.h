@@ -27,8 +27,8 @@ class SnakeGame
         void process_events();
         bool gamer_over();
         void end_messenge();
+        void render_snakeKamikaze();
 
-        void draw_snake();
 };
 
 
