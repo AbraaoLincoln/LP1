@@ -100,14 +100,42 @@ void SnakeGame::render_food()
        if(level[food.i*columns+food.j] == ' '){
             if(not m_snakeAI->checks_body(food.i*columns+food.j))
             {
-                level[food.i*columns+food.j] =  'f';
-                break;
+                if(check_sidesFood(food))
+                {
+                    level[food.i*columns+food.j] =  'f';
+                    break;
+                }
             }
         }
     
     } while(true);
     
     //render_grid();
+}
+
+/**
+ * check_sidesFood
+ * verifica se a comida tem um dos lados livres para que a snake chegue ate ela.
+ * @param food = posicao da food no grid
+ * @return, true se um dos vizinhos da food esta livre, false caso contrario.
+ */
+bool SnakeGame::check_sidesFood(Position & food)
+{
+    if(level[(food.i+1)*columns+food.j] == ' ')
+    {
+        return true;
+    }else if(level[(food.i)*columns+(food.j+1)] == ' ')
+    {
+        return true;
+    }else if(level[(food.i-1)*columns+food.j] == ' ')
+    {
+        return true;
+    }else if(level[food.i*columns+(food.j+1)] == ' ')
+    {
+        return true;
+    }
+
+    return false;
 }
 
 /**

@@ -22,6 +22,7 @@ class SnakeGame
         bool update_level();
         void update();
         void render_food();
+        bool check_sidesFood(Position & food);
         void render_grid();
         void render_snakeMovement();
         void process_events();
