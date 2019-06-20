@@ -19,15 +19,19 @@ SnakeGame::SnakeGame()
  */
 SnakeGame::~SnakeGame()
 {
-    //std::cerr << "delete des\n";
     delete m_snakeAI;
     file_input.close();
+
+    if(state.foods != foodsToEat)
+    {
+        delete[] level;
+    }
 }
 
 /**
  * get_RowsColumns
  * retira de uma string dois inteiro
- * @param line, string que contem os interios separados por espacoes
+ * @param line, string que contem os interios separados por espacos
  */
 void SnakeGame::get_RowsColumns(std::string & line)
 {
@@ -51,7 +55,6 @@ void SnakeGame::initialize_game(std::string file_name)
     file_input.open(file_name);
     std::string line;
 
-    //file_input >> rows >> columns;
     getline(file_input, line);
     get_RowsColumns(line);
 
@@ -61,7 +64,7 @@ void SnakeGame::initialize_game(std::string file_name)
         level = new char[1];
     }else
     {
-        //getline(file_input,line); // Pula uma linha.
+
         level = new char[rows*columns];
         for(auto i{0u}; i < rows; i++)
         {
@@ -86,7 +89,7 @@ void SnakeGame::initialize_game(std::string file_name)
 
 /**
  * render_food
- * Gera a comida aleatoriamente em algum lugar da grid
+ * Gera a comida aleatoriamente em algum lugar do grid
  */
 void SnakeGame::render_food()
 {
@@ -110,7 +113,6 @@ void SnakeGame::render_food()
     
     } while(true);
     
-    //render_grid();
 }
 
 /**
