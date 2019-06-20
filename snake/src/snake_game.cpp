@@ -244,6 +244,7 @@ void SnakeGame::update()
             state.foods = 0;
             m_snakeAI->reset(spawn, 0);
             m_snakeAI->update_grid(level, snake, rows, columns);
+            wait_user(1);
             system("clear");
         }
     }
@@ -320,6 +321,8 @@ void SnakeGame::process_events()
         m_snakeAI->snake_kamikaze(snake);
         render_snakeKamikaze();
         state.lives--;
+        //render_grid();
+        wait_user(2);
         if(state.lives != 0)
         {
             level[food.i*columns+food.j] = ' ';
@@ -327,9 +330,38 @@ void SnakeGame::process_events()
             snake.j = spawn.j;
             m_snakeAI->reset(spawn, 1);
         }
-        std::cout << "Solução não encontrada!\n";
-        //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
+}
+
+/**
+ * wait_user
+ * exibi no terminal uma menssagem correspondente ao evento que acontceu(passou o level ou bateu) e espera o usuario apertar enter.
+ * @param event, qual evento aconteceu
+ * 1 = a snake limpou o level
+ * 2 = a snake bateu
+ */
+void SnakeGame::wait_user(short event)
+{
+    std::string user_input;
+    system("clear");
+    switch(event)
+    {
+        case 1:
+            std::cout << "=============================\n";
+            std::cout << "| A snake completou o level |\n";
+            std::cout << "=============================\n";
+            std::cout << ">>> APERTER ENTER para ir para o proximo level da simulacao\n";
+            break;
+        case 2:
+            std::cout << "=============================\n";
+            std::cout << "|       A snake bateu!      |\n";
+            std::cout << "=============================\n";
+            std::cout << ">>> APERTER ENTER para continuar a simulacao\n";
+            break;
+        default:
+            std::cout << "Nenhuma menssagem!\n";
+    }
+    getline(std::cin, user_input);
 }
 
 /**
@@ -362,7 +394,7 @@ void SnakeGame::end_messenge()
     if(state.foods == foodsToEat)
     {
         std::cout << "=============================\n";
-        std::cout << "| A snake completou o level |\n";
+        std::cout << "| A snake zerou a simulacao |\n";
         std::cout << "=============================\n";
     }
 

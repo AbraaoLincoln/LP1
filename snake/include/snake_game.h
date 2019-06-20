@@ -29,6 +29,7 @@ class SnakeGame
         bool gamer_over();
         void end_messenge();
         void render_snakeKamikaze();
+        void wait_user(short event);
 
 };
 
