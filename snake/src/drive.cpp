@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 
     while(not maneger.gamer_over())
     {
+        std::cerr << "asdasd\n";
         maneger.process_events();
         maneger.update();
     }

@@ -14,6 +14,7 @@ class SnakeGame
         Position snake, food, spawn;
         std::ifstream file_input;
         States state;
+        bool failReadFile;
     public:
         SnakeGame();
         ~SnakeGame();

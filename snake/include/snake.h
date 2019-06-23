@@ -12,7 +12,6 @@ class Snake
     private:
         char *m_grid; //grid atual do jogo
         unsigned m_rows, m_columns, m_snake_size, distance;
-        //Position spawn, pst_snake;
         std::unordered_set<unsigned> visited; //armazena as posicoes visitadas.
         std::vector<std::vector<unsigned> > shortest_path;
         std::queue<Position> fila;
@@ -39,10 +38,10 @@ class Snake
         //Metods quando nao se acha um caminho.
         void snake_kamikaze(Position & snake);
         short checks_freePath(Position & snake);
-        std::vector<unsigned>& get_kamikazePath();
         //Gets
         std::queue<unsigned>& get_snakeBody();
         std::vector<unsigned>& get_shortestPath(Position & food);
+        std::vector<unsigned>& get_kamikazePath();
 };
 
 #endif

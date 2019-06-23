@@ -19,13 +19,10 @@ SnakeGame::SnakeGame()
  */
 SnakeGame::~SnakeGame()
 {
-    delete m_snakeAI;
     file_input.close();
+    delete m_snakeAI;
 
-    if(state.foods != foodsToEat)
-    {
-        delete[] level;
-    }
+    if(state.foods != foodsToEat) { delete[] level; }
 }
 
 /**
@@ -60,11 +57,11 @@ void SnakeGame::initialize_game(std::string file_name)
 
     if((rows < 1 or columns < 1) or (rows > 100 or columns > 100))
     {
-        std::cout << "Tamanho do grid invalido\n";
         level = new char[1];
+        failReadFile = true;
     }else
     {
-
+        failReadFile = false;
         level = new char[rows*columns];
         for(auto i{0u}; i < rows; i++)
         {
@@ -81,10 +78,10 @@ void SnakeGame::initialize_game(std::string file_name)
                 }
             }
         }
-    }
 
+        // = new Snake{level, rows, columns, snake};
+    }
     m_snakeAI = new Snake{level, rows, columns, snake};
-    
 }
 
 /**
@@ -154,7 +151,12 @@ void SnakeGame::render_grid()
     {
         for(auto j{0u}; j < columns; j++)
         {
-            std::cout << level[i*columns+j];
+            if(level[i*columns+j] == '.'){
+                std::cout << " ";
+            }else
+            {
+                std::cout << level[i*columns+j];
+            }
         }
         std::cout << "\n";
     }
@@ -239,7 +241,7 @@ void SnakeGame::render_snakeKamikaze()
  */
 void SnakeGame::update()
 {
-    if(state.foods == foodsToEat)
+    if((not failReadFile) and (state.foods == foodsToEat))
     {
         if(update_level())
         {
@@ -272,23 +274,32 @@ bool SnakeGame::update_level()
             state.level++;
             get_RowsColumns(line);
 
-            level = new char[rows*columns];
-            for(auto i{0u}; i < rows; i++)
+            if((rows < 1 or columns < 1) or (rows > 100 or columns > 100))
             {
-                getline(file_input,line);
-                for(auto j{0u}; j < columns; j++)
+                failReadFile = true;
+                return false;
+            }else
+            {
+                failReadFile = false;
+                level = new char[rows*columns];
+                for(auto i{0u}; i < rows; i++)
                 {
-                    level[i*columns+j] = line[j];
-                    if(line[j] == '*')
+                    getline(file_input,line);
+                    for(auto j{0u}; j < columns; j++)
                     {
-                        snake.i = i;
-                        snake.j = j;
-                        spawn.i = i;
-                        spawn.j = j;
+                        level[i*columns+j] = line[j];
+                        if(line[j] == '*')
+                        {
+                            snake.i = i;
+                            snake.j = j;
+                            spawn.i = i;
+                            spawn.j = j;
+                        }
                     }
                 }
-            }
-            return true;
+                return true;        
+            }    
+
         }
 
         return false;
@@ -383,6 +394,10 @@ bool SnakeGame::gamer_over()
         return true;
     }
 
+    if(failReadFile){
+        return true;
+    }
+
     return false;
 }
 
@@ -392,14 +407,23 @@ bool SnakeGame::gamer_over()
  */
 void SnakeGame::end_messenge()
 {
-    system("clear");
+    if(not failReadFile)
+    { 
+        system("clear"); 
+    }else
+    {
+        std::cout << "Tamanho do grid invalido\n";
+        state.foods = 0;
+    }
+    
+
     if(state.foods == foodsToEat)
     {
         std::cout << "=============================\n";
         std::cout << "| A snake zerou a simulacao |\n";
         std::cout << "=============================\n";
     }
-
+    
     if(state.lives == 0)
     {
         std::cout << "=============================\n";
