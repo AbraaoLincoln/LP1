@@ -138,8 +138,8 @@ bool SnakeGame::check_sidesFood(Position & food)
 void SnakeGame::render_grid()
 {
     level[0] = '#';
-    std::cout << "Lives: " << state.lives << std::endl;
-    std::cout << "Foods: " << state.foods << "/" << foodsToEat << std::endl;
+    std::cout << "Vidas: " << state.lives << std::endl;
+    std::cout << "Comidas: " << state.foods << "/" << foodsToEat << std::endl;
     std::cout << "Level: " << state.level << std::endl;
     for(auto i{0u}; i < rows; i++)
     {
@@ -182,6 +182,7 @@ void SnakeGame::snakeMovement()
         forword++;
         body_movement.push_back(path[i]);
         level[path[i]] = 'o';
+        if(i == (path.size()-1)) { state.foods++; }
         render_grid();
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
     }
@@ -191,8 +192,6 @@ void SnakeGame::snakeMovement()
     {
         level[body_movement[i]] = ' ';
     }
-    //std::cerr << m_snakeAI->m_snake_size << " , " << count<<"\n";
-    //std::cerr << forword << " , " << body_movement.size() << "\n";
 }
 
 /**
@@ -323,7 +322,7 @@ void SnakeGame::process_events()
     {
         snakeMovement();
         m_snakeAI->update_body(food);
-        state.foods++;
+        //state.foods++;
         if(state.foods != foodsToEat)
         {
             m_snakeAI->reset(spawn, 32000); //passando o spwan so por passar.(nao e usuado no reset)
@@ -398,6 +397,24 @@ bool SnakeGame::gamer_over()
         return true;
     }
 
+    return false;
+}
+
+/**
+ * Mostra na tela as informacoes inicias.
+ * @return true se o usuario apertou enter, false caso contrario.
+ */
+bool SnakeGame::show_info()
+{
+    std::string user_input;
+
+    std::cout << "==============================================\n";
+    std::cout << "| Vidas da Snake: " << state.lives << " | Comidas para comer: " << foodsToEat << " |\n";
+    std::cout << "==============================================\n";
+    std::cout << ">>> Aperte <ENTER> para iniciar a simulacao!";
+    getline(std::cin, user_input);
+
+    if(user_input == "") { return true; }
     return false;
 }
 

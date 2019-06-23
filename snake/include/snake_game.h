@@ -36,6 +36,7 @@ class SnakeGame
         void end_messenge();
         void snakeKamikazeMovement();
         void wait_user(short event);
+        bool show_info();
 
 };
 

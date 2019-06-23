@@ -7,12 +7,15 @@ int main(int argc, char *argv[])
     SnakeGame maneger;
     maneger.initialize_game(argv[1]);
 
-    while(not maneger.gamer_over())
+    if(maneger.show_info())
     {
-        maneger.process_events();
-        maneger.update();
+        while(not maneger.gamer_over())
+        {
+            maneger.process_events();
+            maneger.update();
+        }
+        maneger.end_messenge();
     }
-    maneger.end_messenge();
         
     return 0;
 }
