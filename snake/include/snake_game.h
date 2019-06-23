@@ -5,6 +5,10 @@
 #include "../include/snake.h"
 #include "common.h"
 
+
+/*! \brief
+ * Gerencia a simulacao.
+ */
 class SnakeGame
 {
     private:
@@ -14,7 +18,8 @@ class SnakeGame
         Position snake, food, spawn;
         std::ifstream file_input;
         States state;
-        bool failReadFile;
+        bool spawn_set; //Se true, o spawn foi setado, false caso contrario.
+        bool failReadFile; //Se true, o houve falha ao ler o arquivo. Caso cantrario false.
     public:
         SnakeGame();
         ~SnakeGame();
@@ -25,11 +30,11 @@ class SnakeGame
         void render_food();
         bool check_sidesFood(Position & food);
         void render_grid();
-        void render_snakeMovement();
+        void snakeMovement();
         void process_events();
         bool gamer_over();
         void end_messenge();
-        void render_snakeKamikaze();
+        void snakeKamikazeMovement();
         void wait_user(short event);
 
 };

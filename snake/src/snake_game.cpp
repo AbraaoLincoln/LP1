@@ -6,16 +6,16 @@
 #include <thread>
 
 /**
- * construtor da classe snake_game
+ *
  */
 SnakeGame::SnakeGame()
 {
     foodsToEat = 10;
+    spawn_set = false;
 }
 
 /**
- * destructor da classe snake_game
- * Libera a memoria alocada no initialize_game
+ * Libera a memoria alocada no initialize_game e fecha o arquivo de input.
  */
 SnakeGame::~SnakeGame()
 {
@@ -26,9 +26,8 @@ SnakeGame::~SnakeGame()
 }
 
 /**
- * get_RowsColumns
  * retira de uma string dois inteiro
- * @param line, string que contem os interios separados por espacos
+ * @param line = string que contem os interios separados por espacos
  */
 void SnakeGame::get_RowsColumns(std::string & line)
 {
@@ -43,7 +42,6 @@ void SnakeGame::get_RowsColumns(std::string & line)
 }
 
 /**
- * Inicializa o jogo.
  * Carrega o primeiro level do jogo
  * @param file_name = nome do arquivo de entrada com as configuracoes
  */
@@ -75,17 +73,15 @@ void SnakeGame::initialize_game(std::string file_name)
                     snake.j = j;
                     spawn.i = i;
                     spawn.j = j;
+                    spawn_set = true;
                 }
             }
         }
-
-        // = new Snake{level, rows, columns, snake};
     }
     m_snakeAI = new Snake{level, rows, columns, snake};
 }
 
 /**
- * render_food
  * Gera a comida aleatoriamente em algum lugar do grid
  */
 void SnakeGame::render_food()
@@ -113,10 +109,9 @@ void SnakeGame::render_food()
 }
 
 /**
- * check_sidesFood
  * verifica se a comida tem um dos lados livres para que a snake chegue ate ela.
  * @param food = posicao da food no grid
- * @return, true se um dos vizinhos da food esta livre, false caso contrario.
+ * @return true se um dos vizinhos da food esta livre, false caso contrario.
  */
 bool SnakeGame::check_sidesFood(Position & food)
 {
@@ -138,8 +133,7 @@ bool SnakeGame::check_sidesFood(Position & food)
 }
 
 /**
- * render_grid
- * mostra no terminal o grid atual
+ * mostra no terminal o grid atual mais os estatus atuais da simulacao.
  */
 void SnakeGame::render_grid()
 {
@@ -163,14 +157,13 @@ void SnakeGame::render_grid()
 }
 
 /**
- * render_snakeMovement
- * mostra o grid com a snake se movendo
+ * move a snake no grid.
  */
-void SnakeGame::render_snakeMovement()
+void SnakeGame::snakeMovement()
 {
     auto aux_body{m_snakeAI->get_snakeBody()};
     std::vector<unsigned> body_movement, path{m_snakeAI->get_shortestPath(food)};
-    unsigned forword{0};
+    unsigned forword{0}, count{0};
 
     //Coloca a snake na posicao inicial
     while(not aux_body.empty())
@@ -178,12 +171,13 @@ void SnakeGame::render_snakeMovement()
         body_movement.push_back(aux_body.front());
         level[aux_body.front()] = 'o';
         aux_body.pop();
+        count++;
     }
     render_grid();
     //Faz o movimento da snake
     for(auto i{2u}; i < path.size(); i++)
     {
-        system("clear");
+        //system("clear");
         level[body_movement[forword]] = ' ';
         forword++;
         body_movement.push_back(path[i]);
@@ -191,18 +185,20 @@ void SnakeGame::render_snakeMovement()
         render_grid();
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
     }
-    system("clear");
+    //system("clear");
     //Limpa o caminho feito pela snake.
     for(auto i{forword}; i < body_movement.size(); i++)
     {
         level[body_movement[i]] = ' ';
     }
+    //std::cerr << m_snakeAI->m_snake_size << " , " << count<<"\n";
+    //std::cerr << forword << " , " << body_movement.size() << "\n";
 }
 
 /**
- * render_snakeKamikaze
+ * move a snake na direcao da parede.
  */
-void SnakeGame::render_snakeKamikaze()
+void SnakeGame::snakeKamikazeMovement()
 {
     auto aux_body{m_snakeAI->get_snakeBody()};
     std::vector<unsigned> body_movement, path{m_snakeAI->get_kamikazePath()};
@@ -219,7 +215,7 @@ void SnakeGame::render_snakeKamikaze()
     //Faz o movimento da snake
     for(auto i{0u}; i < path.size(); i++)
     {
-        system("clear");
+        //system("clear");
         level[body_movement[forword]] = ' ';
         forword++;
         body_movement.push_back(path[i]);
@@ -227,7 +223,7 @@ void SnakeGame::render_snakeKamikaze()
         render_grid();
         std::this_thread::sleep_for(std::chrono::milliseconds(175));
     }
-    system("clear");
+    //system("clear");
     //Limpa o caminho feito pela snake.
     for(auto i{forword}; i < body_movement.size(); i++)
     {
@@ -236,28 +232,30 @@ void SnakeGame::render_snakeKamikaze()
 }
 
 /**
- * update
  * verificar se a snake comeu todoas as comidas do level, se sim e a simulacao tiver mais de um level atualiza para o proximo.
  */
 void SnakeGame::update()
 {
     if((not failReadFile) and (state.foods == foodsToEat))
     {
-        if(update_level())
+        
+        do
         {
-            state.foods = 0;
-            m_snakeAI->reset(spawn, 0);
-            m_snakeAI->update_grid(level, snake, rows, columns);
-            wait_user(1);
-            system("clear");
-        }
+            if(update_level())
+            {
+                state.foods = 0;
+                m_snakeAI->reset(spawn, 0);
+                m_snakeAI->update_grid(level, snake, rows, columns);
+                if(spawn_set){ wait_user(1); }
+                //system("clear");
+            }
+        }while(not spawn_set);
     }
 }
 
 /**
- * update_level
- * carrega o proximo level na memoria
- * @return true, se o proximo level foi carregado, false caso contrario
+ * carrega o proximo level na memoria.
+ * @return true se o proximo level foi carregado, false caso contrario.
  */
 
 bool SnakeGame::update_level()
@@ -280,6 +278,7 @@ bool SnakeGame::update_level()
                 return false;
             }else
             {
+                spawn_set = false;
                 failReadFile = false;
                 level = new char[rows*columns];
                 for(auto i{0u}; i < rows; i++)
@@ -294,6 +293,7 @@ bool SnakeGame::update_level()
                             snake.j = j;
                             spawn.i = i;
                             spawn.j = j;
+                            spawn_set = true;
                         }
                     }
                 }
@@ -309,8 +309,10 @@ bool SnakeGame::update_level()
 }
 
 /**
- * process_events
- * processa os eventos do jogo
+ * processa os eventos do jogo <br>
+ * verifica se existe um caminho ate a comida <br>
+ * atualiza os status <br>
+ * renderiza o movimento da snake
  */
 void SnakeGame::process_events()
 {
@@ -319,7 +321,7 @@ void SnakeGame::process_events()
 
     if(m_snakeAI->find_solution(snake, food))
     {
-        render_snakeMovement();
+        snakeMovement();
         m_snakeAI->update_body(food);
         state.foods++;
         if(state.foods != foodsToEat)
@@ -328,13 +330,12 @@ void SnakeGame::process_events()
             snake.i = food.i;
             snake.j = food.j;
         }
-
+        
     }else
     {
         m_snakeAI->snake_kamikaze(snake);
-        render_snakeKamikaze();
+        snakeKamikazeMovement();
         state.lives--;
-        //render_grid();
         wait_user(2);
         if(state.lives != 0)
         {
@@ -347,16 +348,15 @@ void SnakeGame::process_events()
 }
 
 /**
- * wait_user
  * exibi no terminal uma menssagem correspondente ao evento que acontceu(passou o level ou bateu) e espera o usuario apertar enter.
- * @param event, qual evento aconteceu
- * 1 = a snake limpou o level
+ * @param event = qual evento aconteceu <br>
+ * 1 = a snake limpou o level <br>
  * 2 = a snake bateu
  */
 void SnakeGame::wait_user(short event)
 {
     std::string user_input;
-    system("clear");
+    //system("clear");
     switch(event)
     {
         case 1:
@@ -378,9 +378,9 @@ void SnakeGame::wait_user(short event)
 }
 
 /**
- * gamer_over
- * verifica se os uma das condicoes de termino de jogo aconteceu
- * @return true, se o snake comeu o numero de todas as comidas do level ou se a quantidade de vidas chegou a zero. false caso contrario.
+ * verifica se  uma das condicoes de termino de jogo aconteceu
+ * @return true se o snake comeu o numero de todas as comidas do level ou se a quantidade de vidas chegou a zero. false caso contrario.
+ * @return true se houve falha ao ler o input.
  */
 bool SnakeGame::gamer_over()
 {
@@ -402,14 +402,13 @@ bool SnakeGame::gamer_over()
 }
 
 /**
- * end_messenge
  * exibi uma menssagem final no terminal
  */
 void SnakeGame::end_messenge()
 {
     if(not failReadFile)
     { 
-        system("clear"); 
+        //system("clear"); 
     }else
     {
         std::cout << "Tamanho do grid invalido\n";

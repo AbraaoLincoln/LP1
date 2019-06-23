@@ -7,11 +7,14 @@
 #include <unordered_set>
 #include <vector>
 
+/*! \brief
+ * IA que resolve o game snaze
+ */
 class Snake
 {
     private:
         char *m_grid; //grid atual do jogo
-        unsigned m_rows, m_columns, m_snake_size, distance;
+        //unsigned m_rows, m_columns, m_snake_size, distance;
         std::unordered_set<unsigned> visited; //armazena as posicoes visitadas.
         std::vector<std::vector<unsigned> > shortest_path;
         std::queue<Position> fila;
@@ -19,6 +22,7 @@ class Snake
         std::vector<unsigned> ghost_snake_body;
         std::vector<unsigned> kamikaze_path;
     public:
+    unsigned m_rows, m_columns, m_snake_size, distance;
         Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake);
         //Metodos para achar o menor caminho
         bool find_solution(Position & snake, Position & food);
@@ -35,7 +39,7 @@ class Snake
         bool isTheBody(unsigned pst);
         void clear_path(Position & food);
         bool checks_body(unsigned pst);
-        //Metods quando nao se acha um caminho.
+        //Metodos quando nao se acha um caminho.
         void snake_kamikaze(Position & snake);
         short checks_freePath(Position & snake);
         //Gets

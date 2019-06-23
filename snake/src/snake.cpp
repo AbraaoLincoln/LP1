@@ -9,11 +9,10 @@
 #include <thread>
 
 /**
- * construct da classe Snake
- * @param grid, vetor que contem o grid do jogo
- * @param rows, quantidade de linhas do grid
- * @param columns, quantidade de colunas do grid
- * @param snake, posicao inicial da snake no grid
+ * @param grid = vetor que contem o grid do jogo
+ * @param rows = quantidade de linhas do grid
+ * @param columns = quantidade de colunas do grid
+ * @param snake = posicao inicial da snake no grid
  */
 Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
 {
@@ -25,11 +24,11 @@ Snake::Snake(char * grid, unsigned & rows, unsigned & columns, Position & snake)
 }
 
 /**
- * update_grid
  * atualiza para o proximo level
- * @param newGrind, ponteiro para o novo grid(level)
- * @param rows, numoro de linhas do grid do novo level
- * @param columns, numoro de colunas do grid do novo level
+ * @param newGrind = ponteiro para o novo grid(level)
+ * @param snake = posicao da snake no novo grid
+ * @param rows = numero de linhas do grid do novo level
+ * @param columns = numero de colunas do grid do novo level
  */
 void Snake::update_grid(char * newGrid, Position & snake, unsigned & rows, unsigned & columns)
 {
@@ -42,11 +41,10 @@ void Snake::update_grid(char * newGrid, Position & snake, unsigned & rows, unsig
 }
 
 /**
- * find_solution
  * encontra o menor caminho ate a comida.
- * @param, snake = posicao da snake no grid
- * @param, food = posicao da comida no grid
- * @return, true se existir um caminho ate a comida, false caso contrario.
+ * @param snake = posicao da snake no grid
+ * @param food = posicao da comida no grid
+ * @return true se existir um caminho ate a comida, false caso contrario.
  */
 bool Snake::find_solution(Position & snake, Position & food)
 {
@@ -55,7 +53,7 @@ bool Snake::find_solution(Position & snake, Position & food)
     std::vector<unsigned> aux_vector;
     distance = 0;
 
-    //Inicializa o vector de vector    
+    //Inicializa o vector de vector(shortest_path)    
     for(auto i{0u}; i < 4;i++)
     {
         std::vector<unsigned> aux(1,0);
@@ -112,10 +110,9 @@ bool Snake::find_solution(Position & snake, Position & food)
 }
 
 /**
- * check_sides
  * verifica se a comida esta em um dos lados da snake.
  * @param snake = posicao da snake no grid
- * @return, true se um dos vizinhos da snake e a comida, false caso contrario.
+ * @return true = se um dos vizinhos da snake e a comida, false caso contrario.
  */
 bool Snake::check_sides(Position & snake)
 {
@@ -137,9 +134,8 @@ bool Snake::check_sides(Position & snake)
 }
 
 /**
- * find_path
  * encontra qual e o atual caminho sendo analisado
- * @param pst, posicao atual da snake
+ * @param pst = posicao atual da snake
  * @return posicao do caminho sendo analisado
  */
 unsigned Snake::find_path(unsigned pst)
@@ -156,12 +152,11 @@ unsigned Snake::find_path(unsigned pst)
 }
 
 /**
- * lineColumnToindex
  * Transforma um indice de matriz i e j em um unico indice para um vetor
  * Usado quando os dados estao em uma matriz mas na memoria estao em um vetor
  * @param i = linha da matriz
  * @param j = coluna da matriz
- * @return index =  indice do elemento no vetor
+ * @return index = indice do elemento no vetor
  */
 unsigned Snake::lineColumnToindex(unsigned i, unsigned j)
 {
@@ -169,9 +164,9 @@ unsigned Snake::lineColumnToindex(unsigned i, unsigned j)
 }
 
 /**
- * render_path
- * marca no grid o caminho ate a comida
- * @param food, posicao da comida no grid
+ * marca o caminho ate a comida, usado para debugge.
+ * @param food = posicao da comida no grid
+ * @param mode = tipo da marcacao
  */
 void Snake::render_path(Position & food, short mode)
 {
@@ -213,9 +208,8 @@ void Snake::render_path(Position & food, short mode)
 }
 
 /**
- * clear_path
  * limpa o caminho feito pela snake ate a comida.(coloca espacoes em branco no caminho)
- * @param food, posicao da comida no grid
+ * @param food = posicao da comida no grid
  */
 void Snake::clear_path(Position & food)
 {
@@ -234,18 +228,16 @@ void Snake::clear_path(Position & food)
     {
         m_grid[shortest_path[path][i]] =  ' ';
     }
-    //m_grid[shortest_path[path][shortest_path[path].size()-1]] =  '*';
 }
 
 /**
- * update_position
- * atualiza a posicao para um de seus vizinhos
- * @param snake posicao da snake no grid
- * @param next proxima posicao da snake
- * 0 = para cima
- * 1 = para direita
- * 2 = para baixo
- * 3 = para a esquerda
+ * atualiza a posicao da snake para um de seus vizinhos
+ * @param snake = posicao da snake no grid
+ * @param next = proxima posicao da snake
+ * 0 = para cima <br>
+ * 1 = para direita <br>
+ * 2 = para baixo <br>
+ * 3 = para a esquerda 
  * @return posicao atualizada
  */
 Position Snake::update_position(Position & snake, short next)
@@ -277,9 +269,8 @@ Position Snake::update_position(Position & snake, short next)
 }
 
 /**
- * update_body
  * simula o movimento da snake
- * @param end_pst, posicao final da snake no grid
+ * @param end_pst = posicao final da snake no grid
  */
 void Snake::simulate_snake(unsigned end_pst)
 {
@@ -305,10 +296,8 @@ void Snake::simulate_snake(unsigned end_pst)
             while(not aux_body.empty())
             {
                 ghost_snake_body.push_back(aux_body.front());
-                //std::cerr << aux_body.front() << " ";
                 aux_body.pop();
             }
-            //std::cerr << "\ndintance 0\n";
         }else
         {
             snake_body = shortest_path[path].size() - m_snake_size;
@@ -321,7 +310,7 @@ void Snake::simulate_snake(unsigned end_pst)
         }
         
 
-    }else //else caso a snake seja maior que o caminho
+    }else //caso a snake seja maior que o caminho
     {
 
         ghost_snake_body.clear();
@@ -346,9 +335,8 @@ void Snake::simulate_snake(unsigned end_pst)
 }
 
 /**
- * isTheBody
  * verifica se o corpo da snake esta no caminho sendo analisado.
- * @param pst, posicao para onde a snake vai.
+ * @param pst = posicao para onde a snake vai.
  */
 bool Snake::isTheBody(unsigned pst)
 {
@@ -364,12 +352,12 @@ bool Snake::isTheBody(unsigned pst)
 }
 
 /**
- * reset
- * resetar tudo para as configuracoes iniciais.
- * @param Snake_spawn, posicao do spawn da snake
- * @param mode, mode execucao
- * 0 = reseta tudo
- * 1 = nao reseta o corpo da snake
+ * reseta tudo para as configuracoes iniciais.
+ * @param Snake_spawn = posicao do spawn da snake.
+ * @param mode = modo de execucao. <br>
+ * 0 = reseta o corpo da snake. <br>
+ * 1 = reseta o corpo da snake e adiciona a cabeca no snake_body. <br>
+ * mode != 0 e 1, nao reseta o corpo da snake.
  */
 void Snake::reset(Position & snake_spawn, short mode)
 {
@@ -408,12 +396,11 @@ void Snake::reset(Position & snake_spawn, short mode)
 }
 
 /**
- * update_body
  * atualiza o tamanho do corpo da snake em 1
  */
 void Snake::update_body(Position & food)
 {
-    unsigned path{0}, new_size{0};
+    unsigned path{0}, new_size{0}, count{0};
 
     //Decidir onde vai ficar a nova parte da snake
     m_snake_size++;
@@ -442,35 +429,48 @@ void Snake::update_body(Position & food)
     }else
     {
         
-        auto aux_body{this->snake_body};
-
-        while(not snake_body.empty())
-        {
-            snake_body.pop();
-        }
-
-        for(auto i{m_snake_size - shortest_path[path].size()}; i < shortest_path[path].size();i++)
-        {
-            aux_body.pop();
-        }
-
-        while(not aux_body.empty())
-        {
-            snake_body.push(aux_body.front());
-            aux_body.pop();
-        }
-
-        for(auto i{0u}; i < shortest_path[path].size(); i++)
+        //auto aux_body{snake_body};
+        for(auto i{0u}; i < shortest_path[path].size();i++)
         {
             snake_body.push(shortest_path[path][i]);
+            count++;
         }
+
+        for(auto i{0u}; i < (shortest_path[path].size() - 1);i++)
+        {
+            snake_body.pop(); //Retira as ultimas posicoes - 1, pois a snake cresceu 1 de tamanho.
+            count++;
+        }
+
+        //std::cerr << "Snake1: " <<m_snake_size << " , " << count << " , " << shortest_path[path].size() << "\n";
+        //std::this_thread::sleep_for(std::chrono::milliseconds(3000));  
+    }
+}
+
+/**
+ * verifica se a posicao passada esta ocupada pela snake
+ * @param pst = posicao a ser testada
+ * @return true caso a snake esteja na posicao, false caso contrario
+ */
+bool Snake::checks_body(unsigned pst)
+{
+    std::queue<unsigned> aux_tail{snake_body};
+    
+    while(not aux_tail.empty())
+    {
+        if(pst == aux_tail.front())
+        {
+            return true;
+        }
+        aux_tail.pop();
     }
 
+    return false;
 }
+
 /**
- * snake_kamikaze
- * a snake se mata, faz o caminho necessario para a snake perder
- * @param snake, posicao da snake
+ * a snake se mata, faz o caminho necessario para a snake bater no muro.
+ * @param snake = posicao da snake
  */
 void Snake::snake_kamikaze(Position & snake)
 {
@@ -515,14 +515,13 @@ void Snake::snake_kamikaze(Position & snake)
 }
 
 /**
- * checks_freePath
  * verifica qual dos lados da snake esta livre.
  * @param snake, posicao da snake no grid.
  * @return
- * 1 = tem um espaco livre acima da snake
- * 2 = tem um espaco livre a direita da snake
- * 3 = tem um espaco livre abaixo da snake
- * 4 = tem um espaco livre a esquerda
+ * 1 = tem um espaco livre acima da snake <br>
+ * 2 = tem um espaco livre a direita da snake <br>
+ * 3 = tem um espaco livre abaixo da snake <br>
+ * 4 = tem um espaco livre a esquerda <br>
  * -1 = nao ha espacos livres ao redor da snake
  */
 short Snake::checks_freePath(Position & snake)
@@ -545,8 +544,7 @@ short Snake::checks_freePath(Position & snake)
 }
 
 /**
- * get_snakamikaze
- * @return, retorna o caminho que a snake vai fazer para perder.
+ * @return retorna o caminho que a snake vai fazer para bater.
  */
  std::vector<unsigned>& Snake::get_kamikazePath()
  {
@@ -554,29 +552,6 @@ short Snake::checks_freePath(Position & snake)
  }
 
 /**
- * checks_body
- * verifica se a posicao passada esta ocupada pela snake
- * @param pst, posicao a ser testada
- * @return true caso a snake esteja na posicao, false caso contrario
- */
-bool Snake::checks_body(unsigned pst)
-{
-    std::queue<unsigned> aux_tail{snake_body};
-    
-    while(not aux_tail.empty())
-    {
-        if(pst == aux_tail.front())
-        {
-            return true;
-        }
-        aux_tail.pop();
-    }
-
-    return false;
-}
-
-/**
- * get_snakeBody
  * @return retorna uma reference para o corpo da snake
  */
 
@@ -585,9 +560,8 @@ std::queue<unsigned>& Snake::get_snakeBody()
     return snake_body;
 }
 /**
- * get_shortestPath
- * @param sht_path indece o menor caminho
- * @param food, posicao da comida no grid
+ * @param sht_path = indece do menor caminho
+ * @param food = posicao da comida no grid
  * @return referencia para o vector que contem o menor caminho.
  */
 std::vector<unsigned>& Snake::get_shortestPath(Position & food)
